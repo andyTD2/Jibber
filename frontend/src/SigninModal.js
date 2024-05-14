@@ -8,7 +8,6 @@ export default function SignupModal()
     const modalIsOpen = useStore((state) => state.signupModalIsOpen)
     const setSignupModalVisibility = useStore((state) => state.setSignupModalIsOpen)
 
-    console.log("signup modalIsOpen?", modalIsOpen);
     return (
         <Modal onClose={() => setSignupModalVisibility(false)} modalIsOpen={modalIsOpen}>
             <div className="text-white text-3xl font-bold text-center mb-6">SIGN UP</div>

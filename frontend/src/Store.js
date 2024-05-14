@@ -7,6 +7,12 @@ export const useStore = create((set) => {
         setLoginModalIsOpen: (modalOpened) => set({loginModalIsOpen: modalOpened}),
 
         signupModalIsOpen: false,
-        setSignupModalIsOpen: (modalOpened) => set({signupModalIsOpen: modalOpened})
+        setSignupModalIsOpen: (modalOpened) => set({signupModalIsOpen: modalOpened}),
+
+        user: undefined,
+        setUser: (newUser) => set({user: newUser}),
+
+        theme: "dark", //default
+        setTheme: (newTheme) => set({theme: newTheme})
     };
     });

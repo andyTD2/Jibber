@@ -5,8 +5,31 @@ import Feed from './Feed';
 import Rightbar from './Rightbar';
 import LoginModal from './LoginModal';
 import SignupModal from './SigninModal';
+import { useEffect } from 'react';
+import { useStore } from './Store';
 
 function App() {
+
+  const setUser = useStore((state) => state.setUser);
+  useEffect(() => {
+
+    const getAuthStatus = async () => {
+      const response = await fetch("https://localhost:3000/me", {
+        method: "GET",
+        credentials: 'include'
+      });
+
+      console.log(response);
+      if(response.ok)
+      {
+        const user = (await response.json()).user
+        setUser(user);
+      }
+    }
+
+    getAuthStatus();
+  }, []);
+
 
   return (
     <>

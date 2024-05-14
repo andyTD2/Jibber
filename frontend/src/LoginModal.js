@@ -2,23 +2,32 @@ import Modal from './Modal';
 import TextInputSmallRound from './TextInputSmallRound';
 import { useStore } from './Store';
 import ButtonSmallRound from './ButtonSmallRound';
+import { useEffect } from 'react';
 
 export default function LoginModal()
 {
-    const modalIsOpen = useStore((state) => state.loginModalIsOpen)
-    const setLoginModalVisibility = useStore((state) => state.setLoginModalIsOpen)
-    const setSignupModalVisibility = useStore((state) => state.setSignupModalIsOpen)
+    const modalIsOpen = useStore((state) => state.loginModalIsOpen);
+    const setLoginModalVisibility = useStore((state) => state.setLoginModalIsOpen);
+    const setSignupModalVisibility = useStore((state) => state.setSignupModalIsOpen);
+
+    const setUser = useStore((state) => state.setUser);
 
     async function fetchLogin(event)
     {
         event.preventDefault();
 
-        fetch("https://localhost:3000/userLogin", {
+        const response = await fetch("https://localhost:3000/userLogin", {
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type" : "application/json"},
             body: JSON.stringify({username: event.target.username.value, password: event.target.password.value})
         });
+        if (response.ok)
+        {
+            const user = (await response.json()).user
+            setUser(user);
+            setLoginModalVisibility(false);
+        }
     }
 
 
