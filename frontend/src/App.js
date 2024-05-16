@@ -19,7 +19,6 @@ function App() {
         credentials: 'include'
       });
 
-      console.log(response);
       if(response.ok)
       {
         const user = (await response.json()).user
@@ -39,7 +38,7 @@ function App() {
         <div className="h-full flex overflow-y-hidden">
           <Leftbar  user={{savedCommunities: ["test community 1", "test community 2", "test community 3", "test community 4"]}}
                     popularCommunities={["test popular community 1", "test popular community 2", "test popular community 3", "test popular community 4"]} />
-          <Feed contentItems={["content item 1", "content item 2", "content item 3", "content item 4", "content item 5", "content item 6"]} />
+          <Feed/>
           <Rightbar />
         </div>
 
