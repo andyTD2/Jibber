@@ -3,14 +3,13 @@ import TextInputSmallRound from './TextInputSmallRound';
 import { useStore } from './Store';
 import ButtonSmallRound from './ButtonSmallRound';
 import { useEffect } from 'react';
+import { getAuthStatus } from './utils/getUser';
 
 export default function LoginModal()
 {
     const modalIsOpen = useStore((state) => state.loginModalIsOpen);
     const setLoginModalVisibility = useStore((state) => state.setLoginModalIsOpen);
     const setSignupModalVisibility = useStore((state) => state.setSignupModalIsOpen);
-
-    const setUser = useStore((state) => state.setUser);
 
     async function fetchLogin(event)
     {
@@ -24,8 +23,7 @@ export default function LoginModal()
         });
         if (response.ok)
         {
-            const user = (await response.json()).user
-            setUser(user);
+            getAuthStatus();
             setLoginModalVisibility(false);
         }
     }

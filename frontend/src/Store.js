@@ -12,23 +12,30 @@ export const useStore = create((set) => {
         user: undefined,
         setUser: (newUser) => set({user: newUser}),
 
+        subscriptionsList: undefined,
+        setSubscriptionsList: (newSubscriptionsList) => set({subscriptionsList: newSubscriptionsList}),
+
         theme: "dark", //default
         setTheme: (newTheme) => set({theme: newTheme}),
 
-        feedContent: undefined,
+        post: undefined,
+        setPost: (newPost) => set({post: newPost}),
+
+        feedContent: [],
         setFeedContent: (newFeedContent) => set({feedContent: newFeedContent}),
-        replaceContentItem: (newContentItem) => {set(prev => 
+        setContentItemInFeed: (contentId, contentItemChanges) => {set(prev => 
         {
             let newFeedContent = [...prev.feedContent]
             for(let i = 0; i < newFeedContent.length; ++i)
             {
-                if(newFeedContent[i].id == newContentItem.id)
+                if(newFeedContent[i].id == contentId)
                 {
+                    const newContentItem = Object.assign({}, newFeedContent[i], contentItemChanges);
                     newFeedContent[i] = newContentItem;
                     break;
                 }
             }
-            return {feedContent: newFeedContent};
+            return {feedContent: newFeedContent}
         })}
     };
     });

@@ -5,16 +5,11 @@ import { useStore } from "./Store";
 
 export default function ContentItem({contentItem})
 {
-    const replaceContentItem = useStore((state) => state.replaceContentItem);
-    const mergeAndReplaceContentItem = (contentItemChanges) =>
-    {
-        const newContentItem = Object.assign({}, contentItem, contentItemChanges);
-        replaceContentItem(newContentItem);
-    }
+    const setContentItemInFeed = useStore((state) => state.setContentItemInFeed);
 
     return (
         <div className="content-item bg-zinc-950 mb-8 min-h-32 flex flex-row pr-2">
-            <VoteController mergeAndReplaceContentItem={mergeAndReplaceContentItem} voteDirection={contentItem.voteDirection} voteCount={contentItem.numVotes} voteHref={`vote/${contentItem.id}`}></VoteController>
+            <VoteController onVoteChange={(newVoteData) => {setContentItemInFeed(contentItem.id, newVoteData)}} voteDirection={contentItem.voteDirection} voteCount={contentItem.numVotes} relativeVoteRoute={`vote/${contentItem.id}`}></VoteController>
             <div className="flex flex-col px-4 py-1 mr-auto w-full">
                 <CreatedTimestamp minutesSinceCreation={contentItem.minutesSinceCreation}></CreatedTimestamp>
                 <a className="mt-2 text-xl hover:underline" href={contentItem.postLink ? contentItem.postLink : `/r/${contentItem.subredditName}/post/${contentItem.id}`}>{contentItem.title}</a>

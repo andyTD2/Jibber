@@ -1,9 +1,14 @@
+import {useStore} from './Store';
+
 export default function Leftbar(props)
 {
+    const user = useStore((state) => state.user);
+    const subscriptionsList = useStore((state) => state.subscriptionsList);
+
     let savedCommunitiesHtml;
-    if(props.user)
+    if(user)
     {
-        savedCommunitiesHtml = props.user.savedCommunities.map((community) => <div className="">&gt; {community}</div>)
+        savedCommunitiesHtml = subscriptionsList.map((subscription) => <div className="">&gt; {subscription.title}</div>)
     }
 
     let popularCommunitiesHtml;
