@@ -10,7 +10,7 @@ export default function Filter({currentFilter, setCurrentFilter, filters})
         onMouseEnter={() => setFilterMenuVisibility(true)} 
         onMouseLeave={() => setFilterMenuVisibility(false)}
         >
-            <div className="ml-2 mr-2 text-orange-600">{currentFilter}</div>
+            <div className="ml-2 mr-2 text-orange-600">{currentFilter.toUpperCase()}</div>
             <div className={`flex ${menuVisibility}`}>
                 {
                     filters.map((filter) => {
@@ -18,7 +18,7 @@ export default function Filter({currentFilter, setCurrentFilter, filters})
                         {
                             return <div className="px-2 hover:bg-zinc-700"
                             onClick={() => {setCurrentFilter(filter); setFilterMenuVisibility(false)}}
-                            >{filter}</div>
+                            >{filter.toUpperCase()}</div>
                         }
                     }
                 )}

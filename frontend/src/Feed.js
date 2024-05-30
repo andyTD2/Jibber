@@ -10,12 +10,15 @@ export default function Feed(props)
     const feedContent = useStore((state) => state.feedContent);
     const setFeedContent = useStore((state) => state.setFeedContent);
     const {subreddit} = useParams();
-    const [currentFilter, setCurrentFilter] = useState("TOP")
+    const [currentFilter, setCurrentFilter] = useState("top")
 
-    
+    console.log("curFilter", currentFilter)
+    let feedRoute = subreddit ? `https://localhost:3000/r/${subreddit}?filter=${currentFilter}` : 
+                                `https://localhost:3000/?filter=${currentFilter}`;
+
     useEffect(() => {
-        const getFeedContent = async (subreddit) => {
-            const feedRoute = subreddit ? `https://localhost:3000/r/${subreddit}` : `https://localhost:3000/`;
+        const getFeedContent = async (feedRoute) => {
+            console.log(feedRoute)
             const response = await fetch(feedRoute, {
             method: "GET",
             credentials: 'include'
@@ -27,13 +30,13 @@ export default function Feed(props)
                 setFeedContent(posts)   
             }
         }
-        getFeedContent(subreddit);
-    }, [user]);
+        getFeedContent(feedRoute);
+    }, [user, currentFilter]);
 
 
     return(
         <div id="feed-container" className="w-3/5 px-12 pt-2 overflow-y-scroll">
-            <Filter currentFilter={currentFilter} setCurrentFilter={setCurrentFilter} filters={["TOP", "NEW", "HOT"]}></Filter>
+            <Filter currentFilter={currentFilter} setCurrentFilter={setCurrentFilter} filters={["top", "new", "hot"]}></Filter>
             <div id="feed" className="h-[5000px] flex flex-col">
                 {
                     feedContent &&
