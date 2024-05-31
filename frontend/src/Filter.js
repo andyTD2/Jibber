@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export default function Filter({currentFilter, setCurrentFilter, filters})
+export default function Filter({currentFilter, updateFilter, filters})
 {
     const [filterMenuVisible, setFilterMenuVisibility] = useState(false);
     const menuVisibility = filterMenuVisible ? "" : "hidden";
@@ -17,7 +17,7 @@ export default function Filter({currentFilter, setCurrentFilter, filters})
                         if(filter != currentFilter)
                         {
                             return <div className="px-2 hover:bg-zinc-700"
-                            onClick={() => {setCurrentFilter(filter); setFilterMenuVisibility(false)}}
+                            onClick={() => {updateFilter(filter); setFilterMenuVisibility(false)}}
                             >{filter.toUpperCase()}</div>
                         }
                     }
