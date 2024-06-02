@@ -23,6 +23,7 @@ export const useStore = create((set) => {
 
         feedContent: [],
         setFeedContent: (newFeedContent) => set({feedContent: newFeedContent}),
+        appendFeedContent: (newFeedContent) => set(prev => ({feedContent: [...prev.feedContent, ...newFeedContent]})),
         setContentItemInFeed: (contentId, contentItemChanges) => {set(prev => 
         {
             let newFeedContent = [...prev.feedContent]
