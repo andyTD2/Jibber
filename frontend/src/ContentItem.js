@@ -8,7 +8,7 @@ export default function ContentItem({contentItem})
     const setContentItemInFeed = useStore((state) => state.setContentItemInFeed);
 
     return (
-        <div className="content-item bg-zinc-950 mb-8 min-h-32 flex flex-row pr-2">
+        <div className="content-item bg-zinc-950 mb-8 min-h-32 flex flex-row pr-2 rounded-md">
             <VoteController onVoteChange={(newVoteData) => {setContentItemInFeed(contentItem.id, newVoteData)}} voteDirection={contentItem.voteDirection} voteCount={contentItem.numVotes} relativeVoteRoute={`vote/${contentItem.id}`}></VoteController>
             <div className="flex flex-col px-4 py-1 mr-auto w-full min-w-0">
                 <CreatedTimestamp minutesSinceCreation={contentItem.minutesSinceCreation}></CreatedTimestamp>

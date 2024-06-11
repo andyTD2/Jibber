@@ -18,7 +18,7 @@ export default function Filter({currentFilter, updateFilter, filters})
                         {
                             return <div className="px-2 hover:bg-zinc-700"
                             onClick={() => {updateFilter(filter); setFilterMenuVisibility(false)}}
-                            >{filter.toUpperCase()}</div>
+                            key={filter}>{filter.toUpperCase()}</div>
                         }
                     }
                 )}

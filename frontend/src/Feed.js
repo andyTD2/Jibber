@@ -1,68 +1,47 @@
-import ContentItem from "./ContentItem"
-import {useEffect, useState} from "react"
+import { useSearchParams } from "react-router-dom";
+import { useEffect, memo } from "react"
 import { useStore } from "./Store";
 import { useRef } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+
 import Filter from "./Filter";
 
-const fetchFeedContent = async (params, callback) => {
-    let feedRoute = "https://localhost:3000/";
-    if (params.subreddit) feedRoute += `r/${params.subreddit}`;
-    if (params.queryParams)
-    {
-        feedRoute += "?";
-        for (const [key, value] of Object.entries(params.queryParams))
-        {
-            feedRoute += `${key}=${value}&`
-        }
-    }
-    
-    const response = await fetch(feedRoute, {
-    method: "GET",
-    credentials: 'include'
-    });
-    
-    if(response.ok)
-    {
-        let posts = (await response.json()).posts;
-        callback(posts);
-    }
-}
+import ContentItem from "./ContentItem"
+import ButtonSmallRound from "./ButtonSmallRound"
 
-export default function Feed(props)
+export function Feed({fetchFeedContent, validFilters, defaultFilter})
 {
-    const validFilters = useRef(new Set(["hot", "top", "new"]));
-    const currentFilter = useRef("hot");
-    const currentPage = useRef(1);
-
     const user = useStore((state) => state.user);
-    const feedContent = useStore((state) => state.feedContent);
     const setFeedContent = useStore((state) => state.setFeedContent);
     const appendFeedContent = useStore((state) => state.appendFeedContent);
-    const {subreddit} = useParams();
-    const [searchParams, setSearchParams] = useSearchParams();
-    console.log("render");
+    const feedContent = useStore((state) => state.feedContent);
 
+    const [searchParams, setSearchParams] = useSearchParams();
+    let currentFilter = useRef(defaultFilter);
+    const currentPage = useRef(1);
+
+    console.log("feed render")
     useEffect(() => {
         currentPage.current = searchParams.get("page");
         currentPage.current = isNaN(currentPage.current) || currentPage.current == null ? 1 : parseInt(currentPage.current);
 
-        currentFilter.current = validFilters.current.has(searchParams.get("filter").toLowerCase()) ? 
-                                    searchParams.get("filter").toLowerCase() : 
-                                    currentFilter.current;
+        if(searchParams.get("filter") != null)
+        {
+            currentFilter.current = validFilters.has(searchParams.get("filter").toLowerCase()) ? 
+                                        searchParams.get("filter").toLowerCase() : 
+                                        currentFilter.current;
+        }
 
-        fetchFeedContent({  subreddit: subreddit, 
-                            queryParams: 
+        fetchFeedContent(
                             {
                                 "filter" : currentFilter.current,
                                 "page" : currentPage.current
-                            }
-                        }, (posts) => setFeedContent(posts));
+                            },   
+                            (posts) => {currentPage.current += 1; setFeedContent(posts)});
                         
     }, [user, searchParams]);
 
     return(
-        <div id="feed-container" className="w-3/5 px-12 pt-2 overflow-y-scroll">
+        <div id="feed-container" className="px-12 pt-2 overflow-y-scroll w-full">
             <Filter 
                 currentFilter={currentFilter.current} 
                 updateFilter={(newFilter) => {
@@ -73,7 +52,7 @@ export default function Feed(props)
                     })
                     currentPage.current = 1;
                 }}
-                filters={Array.from(validFilters.current)}>
+                filters={Array.from(validFilters)}>
             </Filter>
             <div id="feed" className="min-h-full flex flex-col">
                 {
@@ -81,17 +60,27 @@ export default function Feed(props)
                     feedContent.map((contentItem) => <ContentItem key={contentItem.id} contentItem={contentItem}></ContentItem>)
                 }
             </div>
-            <div onClick={() => {
-                currentPage.current += 1;
-                fetchFeedContent({  subreddit: subreddit,
-                                    queryParams: 
-                                    {
-                                        "filter": currentFilter.current,
-                                        "page": currentPage.current
-                                    }
-                                }, (posts) => {appendFeedContent(posts)})
+            <ButtonSmallRound theme="dark" handleClick={
+                () => {
+                    fetchFeedContent(
+                        {
+                            "filter": currentFilter.current,
+                            "page": currentPage.current
+                        }, 
+                        (posts) => 
+                        {
+                            if (posts.length > 0)
+                            {
+                                appendFeedContent(posts)
+                                currentPage.current += 1;
+                            }
+                        }
+                    )
                 }
-            }>NEXT PAGE</div>
+            } 
+            styles={"w-full"}>SHOW MORE</ButtonSmallRound>
         </div>
     )
 }
+
+export const MemoizedFeed = memo(Feed);

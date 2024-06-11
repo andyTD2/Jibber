@@ -18,7 +18,7 @@ export default function Leftbar(props)
     }
 
     return(
-        <div className="bg-zinc-950 px-[2%]">
+        <div className="bg-zinc-950 px-[2%] w-[200px]">
             <div id="saved-communities">
                 <div className="sub-heading">Saved Communities</div>
                 {savedCommunitiesHtml}

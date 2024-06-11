@@ -11,8 +11,8 @@ export default function Navbar(props) {
     if(user)
     {
         msgIconHtml = user.hasMessages ? 
-            <img src="/mail-icon.png" className="my-auto"></img> :
-            <img src="/mail-icon.png" className="my-auto"></img>;
+            <img src="/mail-icon-light.png" className="my-auto w-5 h-5"></img> :
+            <img src="/mail-icon-light.png" className="my-auto w-5 h-5"></img>;
         accountActionHtml = <div className="my-auto mr-3">{user}</div>;
     }
     else
@@ -25,7 +25,7 @@ export default function Navbar(props) {
         <>
             <div className="bg-zinc-950 flex justify-center h-12 px-[2%] border-b border-solid border-zinc-100 box-border w-full">
                 <div className="flex grow basis-0">
-                    <img src="/logo192.png" className="my-auto mr-3 "></img>
+                    <img src="/logo192.png" className="my-auto mr-3 w-6 h-6 object-cover"></img>
                     <div className="my-auto mr-3">TAKE!</div>
                     <div className="my-auto mr-3">&gt;</div>
                     <div className="my-auto">{props.boardName}</div>
