@@ -17,3 +17,12 @@ body {
       monospace;
   }
   
+.scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb{
+  background-color: black;
+  width: 10px;
+  border-radius: 10px;
+}

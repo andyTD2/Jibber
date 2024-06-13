@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { MemoizedFeed } from "./Feed";
 import { MemoizedCategoryHeader } from "./CategoryHeader";
+import { MemoizedSidebar } from "./Sidebar";
 
 const validFilters = new Set(["hot", "top", "new"]);
 const defaultFilter = "hot";
@@ -56,10 +57,14 @@ export default function Board()
         fetchCategory();
     }, [subreddit])
 
+
     return (
-        <div className="flex w-full">
-            <MemoizedFeed fetchFeedContent={useCallback(fetchFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter}></MemoizedFeed>
+        <div className="flex flex-col w-full px-12 overflow-y-scroll">
             {categoryData && <MemoizedCategoryHeader headerTitle={categoryData.name} headerDescription={categoryData.description}></MemoizedCategoryHeader>}
+            <div className="flex w-full">
+                <MemoizedFeed fetchFeedContent={useCallback(fetchFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter}></MemoizedFeed>
+                {categoryData && <MemoizedSidebar sidebarContent={categoryData.sidebar}></MemoizedSidebar>}
+            </div>
         </div>
     )
 }

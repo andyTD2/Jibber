@@ -6,8 +6,8 @@ export function CategoryHeader(props)
     console.log("header render", props)
 
     return (
-        <div className='w-[400px] px-4 pt-[3rem]'>
-            <div className="bg-zinc-950 rounded-md p-3">
+        <div className='w-full'>
+            <div className="bg-zinc-950 rounded-md rounded-bl-none p-3">
                 <div className='flex items-center mb-2'>
                     <div className='placeholder-avatar rounded-full w-11 h-11 bg-blue-500'></div>
                     <h1 className='ml-4 text-3xl '>{props.headerTitle}</h1>

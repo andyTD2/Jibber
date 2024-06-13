@@ -41,7 +41,7 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
     }, [user, searchParams]);
 
     return(
-        <div id="feed-container" className="px-12 pt-2 overflow-y-scroll w-full">
+        <div id="feed-container" className="w-full">
             <Filter 
                 currentFilter={currentFilter.current} 
                 updateFilter={(newFilter) => {
