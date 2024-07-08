@@ -1,4 +1,4 @@
-export default function CreatedTimestamp({minutesSinceCreation})
+export default function CreatedTimestamp({minutesSinceCreation, children})
 {
     let createdDate = ""
     const timeInMinutes = parseInt(minutesSinceCreation);
@@ -10,6 +10,6 @@ export default function CreatedTimestamp({minutesSinceCreation})
     else createdDate = `${Math.floor(timeInMinutes / 518400)} years ago`;
     
     return(
-        <div className="text-xs">{createdDate}</div>
+        <div className="text-xs">posted {createdDate} {children}</div>
     )
 }

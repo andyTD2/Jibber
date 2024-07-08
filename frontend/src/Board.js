@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { MemoizedFeed } from "./Feed";
 import { MemoizedCategoryHeader } from "./CategoryHeader";
 import { MemoizedSidebar } from "./Sidebar";
+import { Route, Routes } from 'react-router-dom';
+import Post from "./Post.js";
 
 const validFilters = new Set(["hot", "top", "new"]);
 const defaultFilter = "hot";
@@ -45,24 +47,38 @@ export default function Board()
 
     const [categoryData, setCategoryData] = useState(undefined);
     useEffect(() => {
-        console.log("fetching board data...")
         const fetchCategory = async () => {
             const response = await fetch(`https://localhost:3000/r/${subreddit}`, {method: "GET", credentials: "include"});
             if(response.ok)
             {
                 let data = await (response.json());
-                setCategoryData(data.subreddit);
-            }
+                console.log("data", data);
+                if(data.subreddit)
+                    setCategoryData(data.subreddit);
+                else
+                    setCategoryData(undefined);
+            }   
         }
-        fetchCategory();
+        if(subreddit)
+        {
+            console.log("fetching board data...")
+            fetchCategory();
+        }
+        else
+        {
+            console.log("no board data to fetch.")
+            setCategoryData(undefined);
+        }
     }, [subreddit])
 
-
     return (
-        <div className="flex flex-col w-full px-12 overflow-y-scroll">
+        <div className="flex flex-col w-full px-12 overflow-y-scroll scrollbar">
             {categoryData && <MemoizedCategoryHeader headerTitle={categoryData.name} headerDescription={categoryData.description}></MemoizedCategoryHeader>}
             <div className="flex w-full">
-                <MemoizedFeed fetchFeedContent={useCallback(fetchFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter}></MemoizedFeed>
+                <Routes>
+                <Route path="" element={<MemoizedFeed fetchFeedContent={useCallback(fetchFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter}></MemoizedFeed>} />
+                <Route path="/post/:postId" element={<Post />} />
+                </Routes>
                 {categoryData && <MemoizedSidebar sidebarContent={categoryData.sidebar}></MemoizedSidebar>}
             </div>
         </div>

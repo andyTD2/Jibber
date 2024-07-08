@@ -10,28 +10,29 @@ export default function PostHeader({postHeaderData, subredditName})
     const setContentItemInFeed = useStore((state) => state.setContentItemInFeed);
 
     return (
-        <div className="bg-zinc-950 flex flex-col">
-            <div className="flex w-full">
+        <div className="flex w-full bg-zinc-950 rounded-r-md">
+            <div className="bg-zinc-900 flex flex-col">
                 <VoteController
                     onVoteChange={(newVoteData) => {
                         setContentItemInFeed(id, newVoteData);
                         let curPost = useStore.getState().post;
                         setPost({...curPost, postHeader: {...curPost.postHeader, ...newVoteData}}); 
                     }} 
-                    voteDirection={voteDirection} voteCount={numVotes} relativeVoteRoute={`vote/${id}`}>
+                    voteDirection={voteDirection} voteCount={numVotes} relativeVoteRoute={`vote/${id}`}
+                    className="max-h-48 rounded-bl-none flex-1">
                 </VoteController>
-                <div className="flex flex-col w-full px-4 py-1">
-                    <CreatedTimestamp minutesSinceCreation={minutesSinceCreation}></CreatedTimestamp>
-                    <div className="mt-2 text-xl">{title}</div>
+            </div>
+            <div className="flex flex-col w-full px-4 py-1">
+                <CreatedTimestamp minutesSinceCreation={minutesSinceCreation}></CreatedTimestamp>
+                <div className="mt-2 text-xl">{title}</div>
+                <div className="mt-2">super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three </div>
+                <div className="flex flex-row mt-8 mb-2">
+                    <ButtonXSmallRound onClick={() => window.location.href=`/r/${subredditName}/post/${id}`} className="mr-6">{numComments} comments</ButtonXSmallRound>
+                    <ButtonXSmallRound onClick={() => window.location.href=`/r/${subredditName}`} className="mr-6">{subredditName}</ButtonXSmallRound>
+                    <ButtonXSmallRound onClick={() => window.location.href=`/u/${author}`}>{author}</ButtonXSmallRound>
                 </div>
-                <img src={imgSrc} className="size-28 object-cover m-2"></img>
             </div>
-            <div>{content}</div>
-            <div className="flex flex-row mt-auto">
-                        <ButtonXSmallRound onClick={() => window.location.href=`/r/${subredditName}/post/${id}`} styles="mr-6">{numComments} comments</ButtonXSmallRound>
-                        <ButtonXSmallRound onClick={() => window.location.href=`/r/${subredditName}`} styles="mr-6">{subredditName}</ButtonXSmallRound>
-                        <ButtonXSmallRound onClick={() => window.location.href=`/u/${author}`}>{author}</ButtonXSmallRound>
-            </div>
+            <img src={imgSrc} className="size-28 object-cover m-2"></img>
         </div>
     )
 }

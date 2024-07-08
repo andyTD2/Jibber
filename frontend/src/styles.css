@@ -26,3 +26,18 @@ body {
   width: 10px;
   border-radius: 10px;
 }
+
+@layer base {
+  h1 {
+    @apply text-4xl;
+  }
+  h2 {
+    @apply text-2xl;
+  }
+  h3 {
+    @apply text-xl;
+  }
+  blockquote {
+    @apply bg-zinc-900 border-l-2 border-zinc-500 m-4 p-2 text-sm
+  }
+}

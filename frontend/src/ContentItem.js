@@ -2,6 +2,7 @@ import ButtonXSmallRound from "./ButtonXSmallRound";
 import CreatedTimestamp from "./CreatedTimestamp";
 import VoteController from "./VoteController"
 import { useStore } from "./Store";
+import { Link } from "react-router-dom";
 
 export default function ContentItem({contentItem})
 {
@@ -14,8 +15,8 @@ export default function ContentItem({contentItem})
                 <CreatedTimestamp minutesSinceCreation={contentItem.minutesSinceCreation}></CreatedTimestamp>
                 <a className="mt-2 text-xl hover:underline break-words" href={contentItem.postLink ? contentItem.postLink : `/r/${contentItem.subredditName}/post/${contentItem.id}`}>{contentItem.title}</a>
                 <div className="flex flex-row mt-auto pt-4">
-                    <ButtonXSmallRound onClick={() => window.location.href=`/r/${contentItem.subredditName}/post/${contentItem.id}`} styles="mr-6">{contentItem.numComments} comments</ButtonXSmallRound>
-                    <ButtonXSmallRound onClick={() => window.location.href=`/r/${contentItem.subredditName}`} styles="mr-6">{contentItem.subredditName}</ButtonXSmallRound>
+                    <Link to={`/r/${contentItem.subredditName}/post/${contentItem.id}`}><ButtonXSmallRound className="mr-6">{contentItem.numComments} comments</ButtonXSmallRound></Link>
+                    <ButtonXSmallRound onClick={() => window.location.href=`/r/${contentItem.subredditName}`} className="mr-6">{contentItem.subredditName}</ButtonXSmallRound>
                     <ButtonXSmallRound onClick={() => window.location.href=`/u/${contentItem.author}`}>{contentItem.author}</ButtonXSmallRound>
                 </div>
             </div>
