@@ -2,15 +2,16 @@ import VoteController from "./VoteController"
 import CreatedTimestamp from "./CreatedTimestamp";
 import ButtonXSmallRound from "./ButtonXSmallRound";
 import { useStore } from "./Store";
+import { twMerge } from "tailwind-merge";
 
-export default function PostHeader({postHeaderData, subredditName})
+export default function PostHeader({postHeaderData, subredditName, className})
 {
     const setPost = useStore((state) => state.setPost);
     let {title, id, voteDirection, numVotes, imgSrc, author, content, minutesSinceCreation, numComments} = postHeaderData;
     const setContentItemInFeed = useStore((state) => state.setContentItemInFeed);
 
     return (
-        <div className="flex w-full bg-zinc-950 rounded-r-md">
+        <div className={twMerge("flex bg-zinc-950 rounded-r-md", className)}>
             <div className="bg-zinc-900 flex flex-col">
                 <VoteController
                     onVoteChange={(newVoteData) => {

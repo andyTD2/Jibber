@@ -78,7 +78,7 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                     )
                 }
             } 
-            styles={"w-full"}>SHOW MORE</ButtonSmallRound>
+            className="w-full">SHOW MORE</ButtonSmallRound>
         </div>
     )
 }

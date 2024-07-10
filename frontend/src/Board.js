@@ -16,7 +16,7 @@ export default function Board()
 
     console.log("board render")
 
-    const fetchFeedContent = async (queryParams, callback) => {
+    const fetchFeedContent = async (queryParams, onSuccess) => {
         let feedRoute = "https://localhost:3000/";
         if (subreddit) feedRoute += `r/${subreddit}/`;
     
@@ -39,7 +39,7 @@ export default function Board()
         if(response.ok)
         {
             let content = await (response.json());
-            callback(content);
+            onSuccess(content);
         }
     }
 

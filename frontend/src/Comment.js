@@ -2,6 +2,7 @@ import CreatedTimestamp from "./CreatedTimestamp"
 import { twMerge } from "tailwind-merge";
 import VoteController from "./VoteController";
 import { useState } from "react";
+import TipTapEditor from "./TipTapEditor";
 
 function setComment(comments, newVoteData, id)
 {
@@ -21,9 +22,16 @@ function setComment(comments, newVoteData, id)
 }
 
 
-export default function Comment({data, className, setPost})
+export default function Comment({data, className, setPost, postComment})
 {
+    const [replyBoxOpen, setReplyBoxOpen] = useState(false);
 
+
+
+
+
+
+    
     return (
         <div className={twMerge("ml-4 mt-4", className)}>
             <div className="flex">
@@ -48,10 +56,12 @@ export default function Comment({data, className, setPost})
                 <div className="rounded-r-md p-4 bg-zinc-950 flex-1">
                     <div><CreatedTimestamp minutesSinceCreation={data.minutesSinceCreation}>by {data.author}</CreatedTimestamp></div>
                     <div>{data.content}</div>
+                    <div onClick={() => setReplyBoxOpen(true)}>reply</div>
                 </div>
             </div>
+            {replyBoxOpen && <TipTapEditor className="mt-4" onSubmit={(commentBody) => {postComment({parentId: data.id, comment: commentBody})}}></TipTapEditor>}
             <div className=" border-l-[1px] border-dashed border-zinc-500">
-                {data.children && data.children.map((comment) => <Comment data={comment} setPost={setPost}></Comment>)}
+                {data.children && data.children.map((comment) => <Comment data={comment} setPost={setPost} postComment={postComment} key={comment.id}></Comment>)}
             </div>
         </div>
     )

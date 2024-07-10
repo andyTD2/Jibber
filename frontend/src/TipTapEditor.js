@@ -16,10 +16,13 @@ import BulletList from '@tiptap/extension-bullet-list'
 import OrderedList from '@tiptap/extension-ordered-list'
 import CharacterCount from '@tiptap/extension-character-count'
 import { twMerge } from 'tailwind-merge';
+import TipTapButton from './TipTapButton';
+import ButtonXSmallRound from './ButtonXSmallRound';
 
-const charLimit = 2000
+const charLimit = 2000;
 
-export default function TipTapEditor({className}) {
+
+export default function TipTapEditor({className, onSubmit}) {
   const editor = useEditor({
     extensions: [Document, Paragraph, Text, Bold, Italic, Strike, Underline, 
                 Subscript, Superscript, Blockquote, BulletList, ListItem, OrderedList,
@@ -30,7 +33,7 @@ export default function TipTapEditor({className}) {
     ],
     editorProps: {
         attributes: {
-          class: 'min-h-[200px] bg-zinc-800 pt-2 break-all [&_ol]:list-decimal [&_ol]:ml-6 [&_ul]:ml-6 [&_ul]:list-disc',
+          class: 'mt-[3px] min-h-[200px] bg-zinc-800 p-2 break-all [&_ol]:list-decimal [&_ol]:ml-6 [&_ul]:ml-6 [&_ul]:list-disc',
         },
       },
   });
@@ -38,74 +41,93 @@ export default function TipTapEditor({className}) {
   if(!editor) return null;
 
   return (
-    <div className={twMerge("border border-gray-300 rounded-md", className)}>
-      <div className="flex">
-        <button 
+    <div className={twMerge("border-2 border-zinc-700 rounded-md", className)}>
+      <div className="flex h-10 items-center pl-2 bg-zinc-950">
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}
-          className={twMerge("mr-2", editor.isActive('heading', {level : 1}) ? 'bg-blue-400' : '')}>
-          h1
-        </button>
-        <button 
+          active={['heading', {level: 1}]}
+          img="/h1-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}
-          className={twMerge("mr-2", editor.isActive('heading', {level : 2}) ? 'bg-blue-400' : '')}>
-          h2
-        </button>
-        <button 
+          active={['heading', {level: 2}]}
+          img="/h2-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}
-          className={twMerge("mr-2", editor.isActive('heading', {level : 3}) ? 'bg-blue-400' : '')}>
-          h3
-        </button>
-        <button 
+          active={['heading', {level: 3}]}
+          img="/h3-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={twMerge("mr-2", editor.isActive('bold') ? 'bg-blue-400' : '')}>
-          bold
-        </button>
-        <button 
+          active={['bold']}
+          img="/bold-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={twMerge("mr-2", editor.isActive('italic') ? 'bg-blue-400' : '')}>
-          Italic
-        </button>
-        <button 
+          active={['italic']}
+          img="/italic-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={twMerge("mr-2", editor.isActive('strike') ? 'bg-blue-400' : '')}>
-          Strike
-        </button>
-        <button 
+          active={['strike']}
+          img="/strike-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={twMerge("mr-2", editor.isActive('underline') ? 'bg-blue-400' : '')}>
-          Underline
-        </button>
-        <button 
+          active={['underline']}
+          img="/underline-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleSubscript().run()}
-          className={twMerge("mr-2", editor.isActive('subscript') ? 'bg-blue-400' : '')}>
-          Subscript
-        </button>
-        <button 
+          active={['subscript']}
+          img="/sub-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleSuperscript().run()}
-          className={twMerge("mr-2", editor.isActive('superscript') ? 'bg-blue-400' : '')}>
-          Superscript
-        </button>
-        <button 
+          active={['superscript']}
+          img="/super-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={twMerge("mr-2", editor.isActive('blockquote') ? 'bg-blue-400' : '')}>
-          Blockquote
-        </button>
-        <button 
+          active={['blockquote']}
+          img="/blockquote-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={twMerge("mr-2", editor.isActive('bulletlist') ? 'bg-blue-400' : '')}>
-          Bullet List
-        </button>
-        <button 
+          active={['bulletList']}
+          img="/bullet-light.png">
+        </TipTapButton>
+        <TipTapButton
+          editor={editor}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={twMerge("mr-2", editor.isActive('orderedlist') ? 'bg-blue-400' : '')}>
-          Ordered List
-        </button>
+          active={['orderedList']}
+          img="/numbered-light.png">
+        </TipTapButton>
+
       </div>
       <EditorContent
         editor={editor}
       />
-      <div>
-        {editor.storage.characterCount.characters()} / {charLimit}
+      <div className="bg-zinc-950 p-2">
+        <div className="flex justify-between">
+          <ButtonXSmallRound className="end" 
+            onClick={() => {onSubmit(editor.getHTML()); editor.commands.clearContent()}}>
+            Submit
+          </ButtonXSmallRound>
+          <div>{editor.storage.characterCount.characters()} / {charLimit}</div>
+        </div>
       </div>
     </div>
   );
