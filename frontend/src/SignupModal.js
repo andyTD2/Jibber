@@ -1,7 +1,7 @@
 import Modal from './Modal';
 import TextInputSmallRound from './TextInputSmallRound';
 import { useStore } from './Store';
-import ButtonSmallRound from './ButtonSmallRound';
+import Button from './Button';
 
 export default function SignupModal()
 {
@@ -16,7 +16,7 @@ export default function SignupModal()
                 className="mb-3"> </TextInputSmallRound>
                 <TextInputSmallRound id="passwordSignupInput" name="password" placeholder="Password" theme="dark"
                 className="mb-6"></TextInputSmallRound>
-                <ButtonSmallRound type="submit" theme="dark">Submit</ButtonSmallRound>
+                <Button type="submit">Submit</Button>
             </form>
         </Modal>
     )

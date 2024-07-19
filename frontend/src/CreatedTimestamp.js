@@ -1,4 +1,6 @@
-export default function CreatedTimestamp({minutesSinceCreation, children})
+import { twMerge } from "tailwind-merge";
+
+export default function CreatedTimestamp({minutesSinceCreation, children, className})
 {
     let createdDate = ""
     const timeInMinutes = parseInt(minutesSinceCreation);
@@ -10,6 +12,6 @@ export default function CreatedTimestamp({minutesSinceCreation, children})
     else createdDate = `${Math.floor(timeInMinutes / 518400)} years ago`;
     
     return(
-        <div className="text-xs">posted {createdDate} {children}</div>
+        <div className={twMerge("text-xs", className)}>posted {createdDate} {children}</div>
     )
 }

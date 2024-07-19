@@ -1,39 +1,45 @@
 import VoteController from "./VoteController"
 import CreatedTimestamp from "./CreatedTimestamp";
-import ButtonXSmallRound from "./ButtonXSmallRound";
-import { useStore } from "./Store";
+import HTMLBearingDiv from "./HTMLBearingDiv";
 import { twMerge } from "tailwind-merge";
+import { Link } from "react-router-dom";
 
-export default function PostHeader({postHeaderData, subredditName, className})
+export default function PostHeader({postHeaderData, className, setPost})
 {
-    const setPost = useStore((state) => state.setPost);
     let {title, id, voteDirection, numVotes, imgSrc, author, content, minutesSinceCreation, numComments} = postHeaderData;
-    const setContentItemInFeed = useStore((state) => state.setContentItemInFeed);
 
     return (
         <div className={twMerge("flex bg-zinc-950 rounded-r-md", className)}>
             <div className="bg-zinc-900 flex flex-col">
+
                 <VoteController
                     onVoteChange={(newVoteData) => {
-                        setContentItemInFeed(id, newVoteData);
-                        let curPost = useStore.getState().post;
-                        setPost({...curPost, postHeader: {...curPost.postHeader, ...newVoteData}}); 
+                        setPost((prev) => {
+                            let newPost = structuredClone(prev);
+                            newPost.postHeader = {...newPost.postHeader, ...newVoteData};
+                            return newPost;
+                        });
                     }} 
                     voteDirection={voteDirection} voteCount={numVotes} relativeVoteRoute={`vote/${id}`}
                     className="max-h-48 rounded-bl-none flex-1">
                 </VoteController>
+
             </div>
+
+            {/* Post header content */}
             <div className="flex flex-col w-full px-4 py-1">
-                <CreatedTimestamp minutesSinceCreation={minutesSinceCreation}></CreatedTimestamp>
+                <CreatedTimestamp minutesSinceCreation={minutesSinceCreation}>by <Link to={`/u/${author}`} className="hover:underline">{author}</Link></CreatedTimestamp>
                 <div className="mt-2 text-xl">{title}</div>
-                <div className="mt-2">super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three super long test one two three </div>
+                <HTMLBearingDiv className="mt-2" htmlContent={content}></HTMLBearingDiv>
                 <div className="flex flex-row mt-8 mb-2">
-                    <ButtonXSmallRound onClick={() => window.location.href=`/r/${subredditName}/post/${id}`} className="mr-6">{numComments} comments</ButtonXSmallRound>
-                    <ButtonXSmallRound onClick={() => window.location.href=`/r/${subredditName}`} className="mr-6">{subredditName}</ButtonXSmallRound>
-                    <ButtonXSmallRound onClick={() => window.location.href=`/u/${author}`}>{author}</ButtonXSmallRound>
+                    {/* <Button handleClick={() => window.location.href=`/u/${author}`}>Share</Button>
+                    <Button handleClick={() => window.location.href=`/u/${author}`}>Save</Button> */}
                 </div>
             </div>
-            <img src={imgSrc} className="size-28 object-cover m-2"></img>
+
+            {/* If the post has an article, and the article has a preview image, show the preview image */}
+            {<img src={imgSrc ? imgSrc : "/text-icon.png"} className="size-28 object-cover m-2"></img>}
+
         </div>
     )
 }

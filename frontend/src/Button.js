@@ -1,8 +1,7 @@
 import { useStore } from './Store';
 import { twMerge } from 'tailwind-merge';
 
-
-export default function ButtonXSmallRound ({className, onClick, children})
+export default function Button({className, type, value, handleClick, children})
 {
     const userThemePreference = useStore((state) => state.theme);
     let theme = userThemePreference === "dark" ? 
@@ -10,6 +9,6 @@ export default function ButtonXSmallRound ({className, onClick, children})
     : "bg-white text-black hover:bg-zinc-200";
 
     return (
-        <button className={twMerge(`text-small px-2 rounded-md ${theme}`, className)} onClick={onClick}>{children}</button>
+        <button type={type} value={value} className={twMerge("text-center px-6 h-9 leading-9 rounded-md", theme, className)} onClick={handleClick}>{children}</button>
     )
 }

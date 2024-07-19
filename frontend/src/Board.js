@@ -4,7 +4,8 @@ import { MemoizedFeed } from "./Feed";
 import { MemoizedCategoryHeader } from "./CategoryHeader";
 import { MemoizedSidebar } from "./Sidebar";
 import { Route, Routes } from 'react-router-dom';
-import Post from "./Post.js";
+import Post, { MemoizedPost } from "./Post.js";
+import BoardControls from "./BoardControls.js";
 
 const validFilters = new Set(["hot", "top", "new"]);
 const defaultFilter = "hot";
@@ -12,8 +13,6 @@ const defaultFilter = "hot";
 export default function Board()
 {
     const {subreddit} = useParams();
-
-
     console.log("board render")
 
     const fetchFeedContent = async (queryParams, onSuccess) => {
@@ -77,9 +76,14 @@ export default function Board()
             <div className="flex w-full">
                 <Routes>
                 <Route path="" element={<MemoizedFeed fetchFeedContent={useCallback(fetchFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter}></MemoizedFeed>} />
-                <Route path="/post/:postId" element={<Post />} />
+                <Route path="/post/:postId" element={<MemoizedPost />} />
                 </Routes>
-                {categoryData && <MemoizedSidebar sidebarContent={categoryData.sidebar}></MemoizedSidebar>}
+                {categoryData && 
+                <div className="w-1/3 mt-10 ml-12 ">
+                    <BoardControls></BoardControls>
+                    <MemoizedSidebar sidebarContent={categoryData.sidebar}></MemoizedSidebar>
+                </div>
+                }
             </div>
         </div>
     )

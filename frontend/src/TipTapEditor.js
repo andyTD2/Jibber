@@ -17,7 +17,7 @@ import OrderedList from '@tiptap/extension-ordered-list'
 import CharacterCount from '@tiptap/extension-character-count'
 import { twMerge } from 'tailwind-merge';
 import TipTapButton from './TipTapButton';
-import ButtonXSmallRound from './ButtonXSmallRound';
+import Button from './Button';
 
 const charLimit = 2000;
 
@@ -122,10 +122,11 @@ export default function TipTapEditor({className, onSubmit}) {
       />
       <div className="bg-zinc-950 p-2">
         <div className="flex justify-between">
-          <ButtonXSmallRound className="end" 
-            onClick={() => {onSubmit(editor.getHTML()); editor.commands.clearContent()}}>
+          <Button
+            handleClick={() => {onSubmit(editor.getHTML()); editor.commands.clearContent()}}
+            className={"leading-normal h-min"}>
             Submit
-          </ButtonXSmallRound>
+          </Button>
           <div>{editor.storage.characterCount.characters()} / {charLimit}</div>
         </div>
       </div>

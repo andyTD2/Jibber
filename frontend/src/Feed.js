@@ -5,8 +5,8 @@ import { useRef } from "react";
 
 import Filter from "./Filter";
 
+import Button from "./Button";
 import ContentItem from "./ContentItem"
-import ButtonSmallRound from "./ButtonSmallRound"
 
 export function Feed({fetchFeedContent, validFilters, defaultFilter})
 {
@@ -54,13 +54,14 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                 }}
                 filters={Array.from(validFilters)}>
             </Filter>
-            <div id="feed" className="min-h-full flex flex-col">
+            <div id="feed" className="flex flex-col">
                 {
                     feedContent &&
                     feedContent.map((contentItem) => <ContentItem key={contentItem.id} contentItem={contentItem}></ContentItem>)
                 }
             </div>
-            <ButtonSmallRound theme="dark" handleClick={
+            <Button handleClick=
+            {
                 () => {
                     fetchFeedContent(
                         {
@@ -77,8 +78,11 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                         }
                     )
                 }
-            } 
-            className="w-full">SHOW MORE</ButtonSmallRound>
+            }
+            className="w-full"
+            >
+            SHOW MORE
+            </Button>
         </div>
     )
 }

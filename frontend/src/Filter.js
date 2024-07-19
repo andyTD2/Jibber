@@ -3,15 +3,14 @@ import { useState } from "react"
 export default function Filter({currentFilter, updateFilter, filters})
 {
     const [filterMenuVisible, setFilterMenuVisibility] = useState(false);
-    const menuVisibility = filterMenuVisible ? "" : "hidden";
 
     return (
-        <div className="flex items-center bg-zinc-950 h-8 mb-2 w-min" 
+        <div className="flex items-center bg-zinc-950 h-8 mb-2 max-w-fit" 
         onMouseEnter={() => setFilterMenuVisibility(true)} 
         onMouseLeave={() => setFilterMenuVisibility(false)}
         >
-            <div className="ml-2 mr-2 text-orange-600">{currentFilter.toUpperCase()}</div>
-            <div className={`flex ${menuVisibility}`}>
+            <div className="ml-2 mr-2 text-zinc-400">SORT: <span className="text-orange-600">{currentFilter.toUpperCase()}</span></div>
+            { filterMenuVisible && <div className={`flex`}>
                 {
                     filters.map((filter) => {
                         if(filter != currentFilter)
@@ -22,7 +21,7 @@ export default function Filter({currentFilter, updateFilter, filters})
                         }
                     }
                 )}
-            </div>
+            </div>}
         </div>
     )
 }
