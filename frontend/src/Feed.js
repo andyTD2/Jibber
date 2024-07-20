@@ -1,80 +1,106 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect, memo } from "react"
+import { useEffect, memo, useState } from "react"
 import { useStore } from "./Store";
-import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { getOffsetFromPage, validateFilter } from "./utils/queryParams";
 
 import Filter from "./Filter";
-
 import Button from "./Button";
 import ContentItem from "./ContentItem"
 
 export function Feed({fetchFeedContent, validFilters, defaultFilter})
 {
+    //States
     const user = useStore((state) => state.user);
-    const setFeedContent = useStore((state) => state.setFeedContent);
-    const appendFeedContent = useStore((state) => state.appendFeedContent);
-    const feedContent = useStore((state) => state.feedContent);
+    const [feed, setFeed] = useState({});
 
+    //URL param hooks
+    const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    let currentFilter = useRef(defaultFilter);
-    const currentPage = useRef(1);
 
-    console.log("feed render")
+    //Calculate initial offset and filter based off url params
+    const initialOffset = getOffsetFromPage(searchParams.get("page"), 20);
+    const initialFilter = validateFilter(searchParams.get("filter"), validFilters) || defaultFilter;
+
+    console.log("feed", feed);
+
     useEffect(() => {
-        currentPage.current = searchParams.get("page");
-        currentPage.current = isNaN(currentPage.current) || currentPage.current == null ? 1 : parseInt(currentPage.current);
-
-        if(searchParams.get("filter") != null)
-        {
-            currentFilter.current = validFilters.has(searchParams.get("filter").toLowerCase()) ? 
-                                        searchParams.get("filter").toLowerCase() : 
-                                        currentFilter.current;
-        }
-
         fetchFeedContent(
                             {
-                                "filter" : currentFilter.current,
-                                "page" : currentPage.current
+                                "filter" : initialFilter,
+                                "offset" : initialOffset
                             },   
-                            (posts) => {currentPage.current += 1; setFeedContent(posts)});
+                            (results) => {
+                                results.itemMap = new Map();
+                                results.items.map(item => results.itemMap.set(item.id, item));
+                                setFeed(results)
+                            });
                         
-    }, [user, searchParams]);
+    }, [user]);
 
     return(
         <div id="feed-container" className="w-full">
+
             <Filter 
-                currentFilter={currentFilter.current} 
+                currentFilter={initialFilter} 
                 updateFilter={(newFilter) => {
-                    setSearchParams((searchParams) => {
-                        searchParams.set("filter", newFilter);
-                        searchParams.delete("page"); 
-                        return searchParams
-                    })
-                    currentPage.current = 1;
+                    fetchFeedContent({  "filter": newFilter, offset: 0},
+                                        (results) => {
+                                            results.itemMap = new Map();
+                                            results.items.map(item => results.itemMap.set(item.id, item));
+                                            setFeed(results);
+                                            navigate(`?filter=${newFilter}`, { replace: true });
+                                        }
+                    );
                 }}
                 filters={Array.from(validFilters)}>
             </Filter>
+
             <div id="feed" className="flex flex-col">
-                {
-                    feedContent &&
-                    feedContent.map((contentItem) => <ContentItem key={contentItem.id} contentItem={contentItem}></ContentItem>)
-                }
+            {
+                feed.items &&
+                feed.items.map((contentItem) => 
+                    <ContentItem 
+                        key={contentItem.id} 
+                        contentItem={contentItem}
+                        onVote={(existingItemId, newData) => 
+                        {
+                            setFeed(prev => 
+                            {
+                                let newFeed = structuredClone(prev);
+                                Object.assign(newFeed.itemMap.get(existingItemId), newData);
+                                //Merge the two objects, if any data conflicts, use newData's values
+                                return newFeed;
+                            })
+                        }}
+                    ></ContentItem>)
+            }
             </div>
-            <Button handleClick=
+
+            {!feed.endOfItems && <Button handleClick=
             {
                 () => {
                     fetchFeedContent(
                         {
-                            "filter": currentFilter.current,
-                            "page": currentPage.current
+                            "filter": initialFilter,
+                            "offset": initialOffset + feed.items.length
                         }, 
-                        (posts) => 
+                        (results) => 
                         {
-                            if (posts.length > 0)
-                            {
-                                appendFeedContent(posts)
-                                currentPage.current += 1;
-                            }
+                            setFeed(prev => {
+                                let newFeed = structuredClone(prev);
+                                newFeed.endOfItems = results.endOfItems;
+                                for(let item of results.items)
+                                {
+                                    if(!newFeed.itemMap.get(item.id))
+                                    {
+                                        newFeed.items.push(item);
+                                        newFeed.itemMap.set(item.id, item);
+                                    }
+                                }
+                                return newFeed;
+                            })
                         }
                     )
                 }
@@ -82,7 +108,7 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
             className="w-full"
             >
             SHOW MORE
-            </Button>
+            </Button>}
         </div>
     )
 }

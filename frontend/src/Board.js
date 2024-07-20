@@ -6,6 +6,7 @@ import { MemoizedSidebar } from "./Sidebar";
 import { Route, Routes } from 'react-router-dom';
 import Post, { MemoizedPost } from "./Post.js";
 import BoardControls from "./BoardControls.js";
+import { getData } from "./utils/fetch.js";
 
 const validFilters = new Set(["hot", "top", "new"]);
 const defaultFilter = "hot";
@@ -15,31 +16,13 @@ export default function Board()
     const {subreddit} = useParams();
     console.log("board render")
 
-    const fetchFeedContent = async (queryParams, onSuccess) => {
-        let feedRoute = "https://localhost:3000/";
-        if (subreddit) feedRoute += `r/${subreddit}/`;
-    
-        feedRoute += "feed"
-        if (queryParams)
-        {
-            feedRoute += "?";
-            for (const [key, value] of Object.entries(queryParams))
-            {
-                feedRoute += `${key}=${value}&`
-            }
-        }
-        console.log(feedRoute)
-        const response = await fetch(feedRoute, 
-        {
-            method: "GET",
-            credentials: 'include'
-        });
-    
-        if(response.ok)
-        {
-            let content = await (response.json());
-            onSuccess(content);
-        }
+    const loadFeedContent = async function(queryParams, onSuccess)
+    {
+        const baseRoute = subreddit ? `https://localhost:3000/r/${subreddit}/feed` : "https://localhost:3000/feed";
+        getData({   baseRoute,
+                    queryParams,
+                    onSuccess
+        })
     }
 
 
@@ -75,7 +58,7 @@ export default function Board()
             {categoryData && <MemoizedCategoryHeader headerTitle={categoryData.name} headerDescription={categoryData.description}></MemoizedCategoryHeader>}
             <div className="flex w-full">
                 <Routes>
-                <Route path="" element={<MemoizedFeed fetchFeedContent={useCallback(fetchFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter}></MemoizedFeed>} />
+                <Route path="" element={<MemoizedFeed fetchFeedContent={useCallback(loadFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter}></MemoizedFeed>} />
                 <Route path="/post/:postId" element={<MemoizedPost />} />
                 </Routes>
                 {categoryData && 
