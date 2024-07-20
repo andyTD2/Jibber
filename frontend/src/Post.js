@@ -85,11 +85,7 @@ export default function Post()
                                             (comment) => 
                                             {
                                                 results.commentMap.set(comment.id, comment)
-                                                comment.processedComments = comment.comments.length;
                                             })
-                        
-                        //See Comment.js for explanation on what processedComments is for
-                        results.processedComments = results.comments.length;
 
                         //Set post state to the results
                         setPost(results);
@@ -117,13 +113,6 @@ export default function Post()
     const initialOffset = getOffsetFromPage(searchParams.get("page"), MAX_COMMENTS_PER_PAGE);
     const initialFilter = validateFilter(searchParams.get("filter"), validFilters) || "top";
 
-    //See Comment.js for an explanation on how processedComments is used
-    let showMoreVisible = false;
-    if(post)
-    {
-        showMoreVisible = post.processedComments + initialOffset < post.postData.numRootComments;
-    }
-
     // This effect triggers when the user changes(a new user means new vote data which must be fetched)
     useEffect(() => {
         loadContent({filter: initialFilter, offset: initialOffset})
@@ -148,11 +137,9 @@ export default function Post()
                                 {
                                     setPost(prev => {
                                         let newPost = structuredClone(prev);
-                                        applyToAllComments(results, (comment) => comment.processedComments = comment.comments.length);
                                         concatCommentTree(newPost.commentMap, newPost.comments, results, "unshift");
                                         newPost.postData.numRootComments += 1;
                                         newPost.postHeader.numComments += 1;
-                                        newPost.processedComments += 1;
                                         return newPost;
                                     })
                                 }
@@ -209,7 +196,7 @@ export default function Post()
                 }
 
                 {/* When this button is clicked, load more comments into the comment tree.*/}
-                {showMoreVisible && 
+                {!post.postData.endOfComments && 
                 <Button handleClick=
                 {
                     () => 
@@ -220,11 +207,11 @@ export default function Post()
                             queryParams: {"filter": initialFilter, offset: post.comments.length + initialOffset, "lastSeen": post.comments[post.comments.length - 1] && post.comments[post.comments.length - 1].id},
                             onSuccess: (results) => 
                             {
+                                console.log("results", results)
                                 setPost((prev) => {
                                     let newPost = structuredClone(prev);
-                                    applyToAllComments(results.comments, (comment) => comment.processedComments = comment.comments.length);
+                                    newPost.postData.endOfComments = results.endOfComments;
                                     concatCommentTree(newPost.commentMap, newPost.comments, results.comments);
-                                    newPost.processedComments += results.comments.length;
                                     return newPost;
                                 })
                             }

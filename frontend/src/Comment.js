@@ -21,21 +21,6 @@ export default function Comment({data, className, setPost, postComment, loadComm
     //States
     const [replyBoxOpen, setReplyBoxOpen] = useState(false);
 
-    /*
-        Sometimes the server will send new comments that contain duplicates, or skip
-        some comments. This is due to the unstable nature of filtering based off unstable
-        values(numVotes). We can easily discard these comments, but it also means that
-        the number of comments inside data.comments will always be less than data.comment_count.
-        This causes the "show more" button to always render if we were to base it off of
-        data.comment.length < data.comment_count
-        So instead, we create a new variable "processedComments" that stores the amount
-        of comments we processed, even if we discarded them. By doing this, we can guarantee
-        that the show more button will not render when we've exhausted all comments.
-        see more: https://coderwall.com/p/lkcaag/pagination-you-re-probably-doing-it-wrong
-    */
-    const showMoreVisible = data.processedComments < data.comment_count;
-
-
     console.log("comment render");
 
 
@@ -85,9 +70,7 @@ export default function Comment({data, className, setPost, postComment, loadComm
                                         {
                                             setPost(prev => {
                                                 let newPost = structuredClone(prev);
-                                                applyToAllComments(results, (comment) => comment.processedComments = comment.comments.length);
                                                 concatCommentTree(newPost.commentMap, newPost.commentMap.get(data.id).comments, results, "unshift");
-                                                newPost.commentMap.get(data.id).processedComments += 1;
                                                 newPost.postHeader.numComments += 1;
                                                 newPost.commentMap.get(data.id).comment_count += 1;
                                                 return newPost;
@@ -105,7 +88,7 @@ export default function Comment({data, className, setPost, postComment, loadComm
                 {data.comments && data.comments.map((comment) => <Comment data={comment} setPost={setPost} postComment={postComment} loadComments={loadComments} key={`${comment.id}`}></Comment>)}
                 
                 {/* Retrive next comments from backend, then concatenate them to the comment tree after processing.*/}
-                {showMoreVisible && <Button handleClick=
+                {!data.endOfComments && <Button handleClick=
                 {() =>
                 {
                     loadComments({  offset: data.comments.length,
@@ -119,9 +102,9 @@ export default function Comment({data, className, setPost, postComment, loadComm
                                     setPost(prev => 
                                     {
                                         let newPost = structuredClone(prev);
-                                        newPost.commentMap.get(data.id).processedComments += results.comments.length;
-                                        applyToAllComments(results.comments, (comment) => comment.processedComments = comment.comments.length);
-                                        concatCommentTree(newPost.commentMap, newPost.commentMap.get(data.id).comments, results.comments);
+                                        let parentComment = newPost.commentMap.get(data.id);
+                                        parentComment.endOfComments = results.endOfComments;
+                                        concatCommentTree(newPost.commentMap, parentComment.comments, results.comments);
                                         return newPost;
                                     });
                                 }
