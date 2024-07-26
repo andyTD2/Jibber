@@ -9,6 +9,6 @@ export default function Button({className, type, value, handleClick, children})
     : "bg-white text-black hover:bg-zinc-200";
 
     return (
-        <button type={type} value={value} className={twMerge("text-center px-6 h-9 leading-9 rounded-md", theme, className)} onClick={handleClick}>{children}</button>
+        <button type={type} value={value} className={twMerge("text-center px-6 h-9 rounded-md", theme, className)} onClick={handleClick}>{children}</button>
     )
 }

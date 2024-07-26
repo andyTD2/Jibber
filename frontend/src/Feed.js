@@ -7,9 +7,10 @@ import { getOffsetFromPage, validateFilter } from "./utils/queryParams";
 
 import Filter from "./Filter";
 import Button from "./Button";
-import ContentItem from "./ContentItem"
+import PostPreview from "./PostPreview"
+import CommentPreview from "./CommentPreview";
 
-export function Feed({fetchFeedContent, validFilters, defaultFilter})
+export function Feed({fetchFeedContent, validFilters, defaultFilter, hideBoardName, hideUserName})
 {
     //States
     const user = useStore((state) => state.user);
@@ -32,8 +33,10 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                                 "offset" : initialOffset
                             },   
                             (results) => {
+                                console.log("feeddata", results);
                                 results.itemMap = new Map();
                                 results.items.map(item => results.itemMap.set(item.id, item));
+                                results.lastSeen = results.items[results.items.length - 1] && results.items[results.items.length - 1].id;
                                 setFeed(results)
                             });
                         
@@ -49,6 +52,7 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                                         (results) => {
                                             results.itemMap = new Map();
                                             results.items.map(item => results.itemMap.set(item.id, item));
+                                            results.lastSeen = results.items[results.items.length - 1] && results.items[results.items.length - 1].id;
                                             setFeed(results);
                                             navigate(`?filter=${newFilter}`, { replace: true });
                                         }
@@ -61,9 +65,12 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
             {
                 feed.items &&
                 feed.items.map((contentItem) => 
-                    <ContentItem 
-                        key={contentItem.id} 
-                        contentItem={contentItem}
+                    contentItem.type && contentItem.type == "comment" ? 
+                    <CommentPreview
+                        key={contentItem.id}
+                        hideBoardName={hideBoardName}
+                        hideUserName={hideUserName}
+                        data={contentItem}
                         onVote={(existingItemId, newData) => 
                         {
                             setFeed(prev => 
@@ -74,7 +81,25 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                                 return newFeed;
                             })
                         }}
-                    ></ContentItem>)
+                    ></CommentPreview>
+                    :
+                    <PostPreview
+                        key={contentItem.id} 
+                        hideBoardName={hideBoardName}
+                        hideUserName={hideUserName}
+                        data={contentItem}
+                        onVote={(existingItemId, newData) => 
+                        {
+                            setFeed(prev => 
+                            {
+                                let newFeed = structuredClone(prev);
+                                Object.assign(newFeed.itemMap.get(existingItemId), newData);
+                                //Merge the two objects, if any data conflicts, use newData's values
+                                return newFeed;
+                            })
+                        }}
+                    ></PostPreview>
+                )
             }
             </div>
 
@@ -84,13 +109,13 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                     fetchFeedContent(
                         {
                             "filter": initialFilter,
-                            "offset": initialOffset + feed.items.length
+                            "offset": initialOffset + feed.items.length,
+                            "lastSeen": feed.lastSeen
                         }, 
                         (results) => 
                         {
                             setFeed(prev => {
                                 let newFeed = structuredClone(prev);
-                                newFeed.endOfItems = results.endOfItems;
                                 for(let item of results.items)
                                 {
                                     if(!newFeed.itemMap.get(item.id))
@@ -99,6 +124,9 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter})
                                         newFeed.itemMap.set(item.id, item);
                                     }
                                 }
+                                results.items = newFeed.items;
+                                results.lastSeen = results.items[results.items.length - 1] && results.items[results.items.length - 1].id;
+                                newFeed = {...newFeed, ...results};
                                 return newFeed;
                             })
                         }

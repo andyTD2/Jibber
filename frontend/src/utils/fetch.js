@@ -19,7 +19,7 @@ export const getData = async ({baseRoute, queryParams, onSuccess}) =>
     method: "GET",
     credentials: 'include'
     });
-    
+    console.log("fetching from:", baseRoute);
     if(response.ok)
     {
         let result = (await response.json());
