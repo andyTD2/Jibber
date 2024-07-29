@@ -10,7 +10,7 @@ import Button from "./Button";
 import PostPreview from "./PostPreview"
 import CommentPreview from "./CommentPreview";
 
-export function Feed({fetchFeedContent, validFilters, defaultFilter, hideBoardName, hideUserName})
+export function Feed({fetchFeedContent, validFilters, defaultFilter, hideBoardName, hideUserName, deps})
 {
     //States
     const user = useStore((state) => state.user);
@@ -27,6 +27,7 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter, hideBoardNa
     console.log("feed", feed);
 
     useEffect(() => {
+        console.log("useeffect triggered")
         fetchFeedContent(
                             {
                                 "filter" : initialFilter,
@@ -40,7 +41,7 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter, hideBoardNa
                                 setFeed(results)
                             });
                         
-    }, [user]);
+    }, [user, ...deps]);
 
     return(
         <div id="feed-container" className="w-full">
@@ -54,7 +55,11 @@ export function Feed({fetchFeedContent, validFilters, defaultFilter, hideBoardNa
                                             results.items.map(item => results.itemMap.set(item.id, item));
                                             results.lastSeen = results.items[results.items.length - 1] && results.items[results.items.length - 1].id;
                                             setFeed(results);
-                                            navigate(`?filter=${newFilter}`, { replace: true });
+
+                                            const curSearchParams = new URLSearchParams(searchParams)
+                                            curSearchParams.set("filter", newFilter);
+                                            curSearchParams.delete("page");
+                                            navigate(`?${curSearchParams.toString()}`, { replace: true });
                                         }
                     );
                 }}

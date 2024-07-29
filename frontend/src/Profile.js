@@ -42,13 +42,14 @@ export default function Profile()
 
     return (
     <div className="flex flex-col w-full px-12 overflow-y-scroll scrollbar">
-        {bannerData && <MemoizedBanner bannerTitle={bannerData.userName} bannerDescription={bannerData.description}></MemoizedBanner>}
+        {bannerData && <MemoizedBanner bannerLink={`/u/${bannerData.userName}`} bannerTitle={bannerData.userName} bannerDescription={bannerData.description}></MemoizedBanner>}
         <div className="flex w-full">
             <MemoizedFeed
+                deps={profile}
                 validFilters={validFilters}
                 defaultFilter={defaultFilter}
                 hideUserName={true}
-                fetchFeedContent={useCallback(loadFeedContent, [])}
+                fetchFeedContent={useCallback(loadFeedContent, [profile])}
             ></MemoizedFeed>
             {bannerData && 
             <div className="w-1/3 mt-10 ml-12 ">

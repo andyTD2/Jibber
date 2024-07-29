@@ -13,7 +13,7 @@ export default function CommentPreview({data, onVote, hideBoardName, hideUserNam
             <VoteController 
                 onVoteChange={(newVoteData) => {onVote(data.id, newVoteData)}} 
                 voteDirection={data.voteDirection} voteCount={data.numVotes} 
-                relativeVoteRoute={`vote/${data.id}`}>
+                relativeVoteRoute={`voteComment/${data.id}`}>
             </VoteController>
             
             <div className="flex flex-col px-4 py-1 mr-auto w-full min-w-0">

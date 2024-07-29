@@ -16,30 +16,6 @@ export default function Board()
     const {subreddit} = useParams();
     console.log("board render")
 
-
-    // const processSubsequentFeedResults = function(results)
-    // {
-    //     results.lastSeenPost = undefined;
-    //     results.lastSeenComment = undefined;
-
-    //     for(let i = results.items.length - 1; i >= 0; i--)
-    //     {
-    //         if(results.items[i].type == "comment" && !results.lastSeenComment)
-    //         {
-    //             results.lastSeenComment = results.items[i];
-    //         }
-    //         else if(results.items[i].type == "post" && !results.lastSeenPost)
-    //         {
-    //             results.lastSeenPost = results.items[i];
-    //         }
-
-    //         if(results.lastSeenComment && results.lastSeenPost)
-    //         {
-    //             break;
-    //         }
-    //     }
-    // }
-
     const loadFeedContent = async function(queryParams, onSuccess)
     {
         const baseRoute = subreddit ? `https://localhost:3000/r/${subreddit}/feed` : "https://localhost:3000/feed";
@@ -78,10 +54,10 @@ export default function Board()
 
     return (
         <div className="flex flex-col w-full px-12 overflow-y-scroll scrollbar">
-            {bannerData && <MemoizedBanner bannerTitle={bannerData.name} bannerDescription={bannerData.description}></MemoizedBanner>}
+            {bannerData && <MemoizedBanner bannerLink={`/r/${bannerData.name}`}bannerTitle={bannerData.name} bannerDescription={bannerData.description}></MemoizedBanner>}
             <div className="flex w-full">
                 <Routes>
-                <Route path="" element={<MemoizedFeed fetchFeedContent={useCallback(loadFeedContent, [])} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={bannerData ? true : false}></MemoizedFeed>} />
+                <Route path="" element={<MemoizedFeed deps={[subreddit]}fetchFeedContent={useCallback(loadFeedContent, [subreddit])} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={bannerData ? true : false}></MemoizedFeed>} />
                 <Route path="/post/:postId" element={<MemoizedPost />} />
                 </Routes>
                 {bannerData && 
