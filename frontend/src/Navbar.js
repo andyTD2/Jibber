@@ -23,7 +23,7 @@ export default function Navbar(props) {
 
     return (
         <>
-            <div className="bg-zinc-950 flex justify-center h-12 px-[2%] border-b border-solid border-zinc-100 box-border w-full">
+            <div className="z-10 bg-zinc-950 flex justify-center max-h-10 min-h-10 px-[2%] border-b border-solid border-zinc-100 box-border w-full">
                 <div className="flex grow basis-0">
                     <img src="/logo192.png" className="my-auto mr-3 w-6 h-6 object-cover"></img>
                     <div className="my-auto mr-3">TAKE!</div>

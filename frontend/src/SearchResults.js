@@ -24,7 +24,7 @@ export default function SearchResults()
     }
 
     return (
-        <div className="px-12 w-full">
+        <div className="px-12 w-full overflow-y-scroll scrollbar">
             <Feed 
                 deps={[searchQuery]}
                 validFilters={validFilters}
