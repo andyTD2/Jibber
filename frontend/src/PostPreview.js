@@ -1,7 +1,6 @@
 import CreatedTimestamp from "./CreatedTimestamp";
 import VoteController from "./VoteController"
 import Button from "./Button";
-import { useStore } from "./Store";
 import { Link } from "react-router-dom";
 
 export default function PostPreview({data, onVote, hideBoardName, hideUserName})

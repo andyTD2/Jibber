@@ -1,8 +1,8 @@
-import {memo} from "react";
+import {memo, useEffect} from "react";
 
 export function Test(props) 
 {
-    console.log("test render");
+    useEffect(() => console.log("test remount"), []);
     return (
         <div>
             {props.test}

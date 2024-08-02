@@ -23,6 +23,7 @@ export const getData = async ({baseRoute, queryParams, onSuccess}) =>
     if(response.ok)
     {
         let result = (await response.json());
+        console.log("res", result);
         onSuccess(result);
     }
 }

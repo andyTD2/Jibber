@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
-import { MemoizedFeed } from "./Feed";
-import { MemoizedBanner } from "./Banner.js";
-import { MemoizedSidebar } from "./Sidebar";
-import { Route, Routes } from 'react-router-dom';
-import Post, { MemoizedPost } from "./Post.js";
+import { useEffect, useState, useCallback } from "react";
+import { useParams, Route, Routes } from "react-router-dom";
+
+
 import BoardControls from "./BoardControls.js";
+import { MemoizedFeedManager } from "./FeedManager.js";
+import { MemoizedBanner } from "./Banner.js";
+import { MemoizedSidebar } from "./Sidebar.js";
+import { MemoizedPost } from "./Post.js";
+
 import { getData } from "./utils/fetch.js";
 
 const validFilters = new Set(["hot", "top", "new"]);
@@ -15,16 +17,6 @@ export default function Board()
 {
     const {subreddit} = useParams();
     console.log("board render")
-
-    const loadFeedContent = async function(queryParams, onSuccess)
-    {
-        const baseRoute = subreddit ? `https://localhost:3000/r/${subreddit}/feed` : "https://localhost:3000/feed";
-        getData({   baseRoute,
-                    queryParams,
-                    onSuccess
-        })
-    }
-
 
     const [bannerData, setBannerData] = useState(undefined);
     useEffect(() => {
@@ -52,12 +44,21 @@ export default function Board()
         }
     }, [subreddit])
 
+    const fetchFeedContent = async function(queryParams, onSuccess)
+    {
+        const baseRoute = subreddit ? `https://localhost:3000/r/${subreddit}/feed` : "https://localhost:3000/feed";
+        getData({   baseRoute,
+                    queryParams,
+                    onSuccess
+        })
+    }
+
     return (
         <div className="flex flex-col w-full px-12 overflow-y-scroll scrollbar">
             {bannerData && <MemoizedBanner bannerLink={`/r/${bannerData.name}`}bannerTitle={bannerData.name} bannerDescription={bannerData.description}></MemoizedBanner>}
             <div className="flex w-full">
                 <Routes>
-                <Route path="" element={<MemoizedFeed deps={[subreddit]}fetchFeedContent={useCallback(loadFeedContent, [subreddit])} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={bannerData ? true : false}></MemoizedFeed>} />
+                <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={useCallback(fetchFeedContent, [subreddit])} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={bannerData ? true : false}></MemoizedFeedManager>} />
                 <Route path="/post/:postId" element={<MemoizedPost />} />
                 </Routes>
                 {bannerData && 

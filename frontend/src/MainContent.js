@@ -1,7 +1,9 @@
-import Board from "./Board.js";
+//import Board from "./Board.js";
 import Profile from "./Profile.js";
 import SearchResults from "./SearchResults.js";
 import { Route, Routes } from 'react-router-dom';
+
+import Board from "./Board.js";
 
 export default function MainContent()
 {

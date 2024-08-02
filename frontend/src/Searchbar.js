@@ -63,10 +63,13 @@ export default function Searchbar()
     const submitForm = (e) => 
     {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const query = formData.get("searchQuery")
+        let url = `/search/?q=${query}`
+        if(categoryFilters.size > 0)
+            url += `&categories=${[...categoryFilters].toString()}`
+        if(userFilters.size > 0)
+            url += `&authors=${[...userFilters].toString()}`
 
-        navigate(`/search/?q=${query}`);
+        navigate(url);
     }
 
     const containerRef = useRef(null);
@@ -118,35 +121,41 @@ export default function Searchbar()
 
                         {categoryFilters.size > 0 && 
                             <div className="flex">
-                                <div>IN:</div>    
-                                {[...categoryFilters].map((value) => 
-                                    <div className="ml-3 rounded-xl bg-zinc-400 px-2 flex items-center">{value} 
-                                        <img src="/close.png" className="ml-2 mt-[1px] h-3 w-3 hover:bg-zinc-100"
-                                            onClick={() => setCategoryFilters(prev => 
-                                            {
-                                                const newFilters = structuredClone(prev);
-                                                newFilters.delete(value);
-                                                return newFilters;
-                                            })}   
-                                        ></img>
-                                    </div>)}
+                                <div>IN:</div>   
+                                <div className="flex gap-y-1 flex-wrap overflow-hidden"> 
+                                    {[...categoryFilters].map((value) => 
+                                        <div className="ml-3 rounded-xl bg-zinc-400 px-2 flex items-center overflow-x-hidden">
+                                            <div className="overflow-x-hidden">{value}</div>
+                                            <img src="/close.png" className="ml-2 mt-[1px] h-3 w-3 hover:bg-zinc-100"
+                                                onClick={() => setCategoryFilters(prev => 
+                                                {
+                                                    const newFilters = structuredClone(prev);
+                                                    newFilters.delete(value);
+                                                    return newFilters;
+                                                })}   
+                                            ></img>
+                                        </div>)}
+                                </div>
                             </div>
                         }
 
                         {userFilters.size > 0 &&
                             <div className="flex mt-2">
-                                <div>BY:</div>    
-                                {[...userFilters].map((value) => 
-                                <div className="ml-3 rounded-xl bg-blue-300 px-2 flex items-center">{value}
-                                    <img src="/close.png" className="ml-2 mt-[1px] h-3 w-3 hover:bg-zinc-100"
-                                        onClick={() => setUserFilters(prev => 
-                                            {
-                                                const newFilters = structuredClone(prev);
-                                                newFilters.delete(value);
-                                                return newFilters;
-                                            })}  
-                                    ></img>
-                                </div>)}
+                                <div>BY:</div>   
+                                <div className="flex gap-y-1 flex-wrap overflow-hidden"> 
+                                    {[...userFilters].map((value) => 
+                                        <div className="ml-3 rounded-xl bg-zinc-400 px-2 flex items-center overflow-x-hidden">
+                                            <div className="overflow-x-hidden">{value}</div>
+                                            <img src="/close.png" className="ml-2 mt-[1px] h-3 w-3 hover:bg-zinc-100"
+                                                onClick={() => setUserFilters(prev => 
+                                                {
+                                                    const newFilters = structuredClone(prev);
+                                                    newFilters.delete(value);
+                                                    return newFilters;
+                                                })}   
+                                            ></img>
+                                        </div>)}
+                                </div>
                             </div>
                         }
 

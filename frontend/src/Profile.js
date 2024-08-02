@@ -5,7 +5,7 @@ import { getData } from "./utils/fetch";
 
 import { MemoizedBanner } from "./Banner";
 import { MemoizedSidebar } from "./Sidebar";
-import { MemoizedFeed } from "./Feed";
+import { MemoizedFeedManager } from "./FeedManager";
 
 const validFilters = new Set(["top", "new"]);
 const defaultFilter = "new";
@@ -44,13 +44,13 @@ export default function Profile()
     <div className="flex flex-col w-full px-12 overflow-y-scroll scrollbar">
         {bannerData && <MemoizedBanner bannerLink={`/u/${bannerData.userName}`} bannerTitle={bannerData.userName} bannerDescription={bannerData.description}></MemoizedBanner>}
         <div className="flex w-full">
-            <MemoizedFeed
+            <MemoizedFeedManager
                 deps={profile}
                 validFilters={validFilters}
                 defaultFilter={defaultFilter}
                 hideUserName={true}
                 fetchFeedContent={useCallback(loadFeedContent, [profile])}
-            ></MemoizedFeed>
+            ></MemoizedFeedManager>
             {bannerData && 
             <div className="w-1/3 mt-10 ml-12 ">
                 <MemoizedSidebar sidebarContent={bannerData.bio}></MemoizedSidebar>
