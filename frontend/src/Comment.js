@@ -1,7 +1,7 @@
 
 //Components
 import CreatedTimestamp from "./CreatedTimestamp"
-import TipTapEditor from "./TipTapEditor";
+import ReplyBox from "./ReplyBox";
 import HTMLBearingDiv from "./HTMLBearingDiv";
 import VoteController from "./VoteController";
 import Button from "./Button";
@@ -59,7 +59,7 @@ export default function Comment({data, className, setPost, postComment, loadComm
 
             </div>
 
-            {replyBoxOpen && <TipTapEditor className="mt-4" 
+            {replyBoxOpen && <ReplyBox className="mt-4" 
                 onSubmit=
                 {
                     (commentBody) => 

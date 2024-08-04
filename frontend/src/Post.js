@@ -12,9 +12,9 @@ import { validateFilter, getOffsetFromPage } from "./utils/queryParams";
 //Components
 import PostHeader from "./PostHeader";
 import MemoizedComment from "./Comment";
-import TipTapEditor from "./TipTapEditor";
 import Filter from "./Filter";
 import Button from "./Button";
+import ReplyBox from "./ReplyBox";
 
 const validFilters = new Set(["top", "new"]);
 const MAX_COMMENTS_PER_PAGE = 20;
@@ -126,7 +126,7 @@ export default function Post()
             {post && <div className="mt-10 h-full ml-12">
                 <PostHeader postHeaderData={post.postHeader} className={"-ml-12"} setPost={setPost}></PostHeader>
 
-                <TipTapEditor className="mt-4" onSubmit=
+                <ReplyBox className="mt-4" onSubmit=
                 {
                     //When a new comment is posted, send a POST request to backend with the comment data.
                     //On success, prepend the newly added comment to the comment tree contained with the post state object

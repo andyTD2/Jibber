@@ -3,6 +3,7 @@ import { useParams, Route, Routes } from "react-router-dom";
 
 
 import BoardControls from "./BoardControls.js";
+import CreatePost from "./CreatePost.js";
 import { MemoizedFeedManager } from "./FeedManager.js";
 import { MemoizedBanner } from "./Banner.js";
 import { MemoizedSidebar } from "./Sidebar.js";
@@ -18,7 +19,7 @@ export default function Board()
     const {subreddit} = useParams();
     console.log("board render")
 
-    const [bannerData, setBannerData] = useState(undefined);
+    const [board, setBoard] = useState(undefined);
     useEffect(() => {
         const fetchCategory = async () => {
             const response = await fetch(`https://localhost:3000/r/${subreddit}`, {method: "GET", credentials: "include"});
@@ -27,9 +28,9 @@ export default function Board()
                 let data = await (response.json());
                 console.log("data", data);
                 if(data.subreddit)
-                    setBannerData(data.subreddit);
+                    setBoard(data.subreddit);
                 else
-                    setBannerData(undefined);
+                    setBoard(undefined);
             }   
         }
         if(subreddit)
@@ -40,34 +41,55 @@ export default function Board()
         else
         {
             console.log("no board data to fetch.")
-            setBannerData(undefined);
+            setBoard(undefined);
         }
     }, [subreddit])
 
-    const fetchFeedContent = async function(queryParams, onSuccess)
+    const fetchFeedContent = useCallback(async function(queryParams, onSuccess)
     {
         const baseRoute = subreddit ? `https://localhost:3000/r/${subreddit}/feed` : "https://localhost:3000/feed";
         getData({   baseRoute,
                     queryParams,
                     onSuccess
         })
+    }, [subreddit])
+
+    const conditionallyRenderFrontPage = () =>
+    {
+        if(board)
+        {
+            return (
+                <>
+                    <MemoizedBanner bannerLink={`/r/${board.name}`}bannerTitle={board.name} bannerDescription={board.description}></MemoizedBanner>
+                    <div className="flex w-full">
+                        <Routes>
+                            <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={board ? true : false}></MemoizedFeedManager>} />
+                            <Route path="/post/:postId" element={<MemoizedPost />} />
+                            <Route path="/newPost" element={<CreatePost board={subreddit} charLimit={10000}/>} />
+                        </Routes>
+                        <div className="w-1/3 mt-10 ml-12 ">
+                            <BoardControls board={subreddit}></BoardControls>
+                            <MemoizedSidebar sidebarContent={board.sidebar}></MemoizedSidebar>
+                        </div>
+                    </div>
+                </>
+                )
+        }
+        else
+        {
+            return  (
+                <div className="flex w-full">
+                    <Routes>
+                        <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={false}></MemoizedFeedManager>} />
+                    </Routes>
+                </div>
+            )
+        }
     }
 
     return (
         <div className="flex flex-col w-full px-12 overflow-y-scroll scrollbar">
-            {bannerData && <MemoizedBanner bannerLink={`/r/${bannerData.name}`}bannerTitle={bannerData.name} bannerDescription={bannerData.description}></MemoizedBanner>}
-            <div className="flex w-full">
-                <Routes>
-                <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={useCallback(fetchFeedContent, [subreddit])} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={bannerData ? true : false}></MemoizedFeedManager>} />
-                <Route path="/post/:postId" element={<MemoizedPost />} />
-                </Routes>
-                {bannerData && 
-                <div className="w-1/3 mt-10 ml-12 ">
-                    <BoardControls></BoardControls>
-                    <MemoizedSidebar sidebarContent={bannerData.sidebar}></MemoizedSidebar>
-                </div>
-                }
-            </div>
+            {conditionallyRenderFrontPage()}
         </div>
     )
 }

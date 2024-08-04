@@ -28,7 +28,7 @@ export const getData = async ({baseRoute, queryParams, onSuccess}) =>
     }
 }
 
-export const postData = async ({baseRoute, queryParams, body, onSuccess}) => 
+export const postData = async ({baseRoute, queryParams, body, onSuccess, onFailure}) => 
 {
     baseRoute = addQueryParams(baseRoute, queryParams);
 
@@ -39,9 +39,13 @@ export const postData = async ({baseRoute, queryParams, body, onSuccess}) =>
         body: JSON.stringify(body)
     });
 
+    const data = await response.json();
     if(response.ok)
     {
-        let results = await response.json(); 
-        onSuccess(results)
+        if(onSuccess) onSuccess(data)
+    }
+    else
+    {
+        if(onFailure) onFailure(data)
     }
 }

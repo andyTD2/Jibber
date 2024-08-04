@@ -42,7 +42,6 @@ export default function SearchResults()
                     onSuccess: postFeed.replaceFeed
         })
 
-        setActiveTab(0);
     }, [searchQuery, categories, authors])
 
     useEffect(() => {
@@ -76,7 +75,7 @@ export default function SearchResults()
 
             {activeTab == 0 && 
             <>
-                <Filter 
+                {postFeed.feed.items && postFeed.feed.items.length > 0 && <Filter 
                     currentFilter={postFeedParams.initialFilter} 
                     updateFilter={(newFilter) => 
                     {
@@ -98,7 +97,7 @@ export default function SearchResults()
                         })
                     }}
                     filters={Array.from(validFilters)}>
-                </Filter>
+                </Filter>}
                 <MemoizedFeed
                     feed={postFeed.feed}
                 ></MemoizedFeed>

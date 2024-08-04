@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function PostHeader({postHeaderData, className, setPost})
 {
-    let {title, id, voteDirection, numVotes, imgSrc, author, content, minutesSinceCreation, numComments} = postHeaderData;
+    let {title, id, voteDirection, numVotes, imgSrc, author, content, minutesSinceCreation, postLink, numComments} = postHeaderData;
 
     return (
         <div className={twMerge("flex bg-zinc-950 rounded-r-md", className)}>
@@ -29,7 +29,8 @@ export default function PostHeader({postHeaderData, className, setPost})
             {/* Post header content */}
             <div className="flex flex-col w-full px-4 py-1">
                 <CreatedTimestamp minutesSinceCreation={minutesSinceCreation}>by <Link to={`/u/${author}`} className="hover:underline">{author}</Link></CreatedTimestamp>
-                <div className="mt-2 text-xl">{title}</div>
+                {postLink && <a href={postLink}><div className="mt-2 text-xl hover:underline">{title}</div></a>}
+                {!postLink && <div className="mt-2 text-xl">{title}</div>}
                 <HTMLBearingDiv className="mt-2" htmlContent={content}></HTMLBearingDiv>
                 <div className="flex flex-row mt-8 mb-2">
                     {/* <Button handleClick={() => window.location.href=`/u/${author}`}>Share</Button>

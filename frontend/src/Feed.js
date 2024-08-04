@@ -8,7 +8,8 @@ export function Feed({hideBoardName, hideUserName, feed, handleItemVote})
 {
     console.log("feed", feed);
 
-    const renderContentPreview = useCallback((item) => 
+
+    const renderContentPreview = (item) => 
     {
         if(!item.type || item.type == "post") //default
         {
@@ -58,7 +59,7 @@ export function Feed({hideBoardName, hideUserName, feed, handleItemVote})
                 ></Banner>
             )
         }
-    }, [])
+    }
 
 
     return(
