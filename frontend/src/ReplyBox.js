@@ -4,19 +4,18 @@ import { twMerge } from 'tailwind-merge';
 import Button from './Button';
 import TipTapEditorTools from './TipTapEditorTools';
 import { useTipTapEditor } from './hooks/useTipTapEditor';
-
-const charLimit = 2000;
+import CONFIG from "./config.json"
+import InputBox from './InputBox';
 
 
 export default function ReplyBox({className, onSubmit}) 
 {
-	const editor = useTipTapEditor({charLimit});
+	const editor = useTipTapEditor({charLimit: CONFIG.GENERIC_MAX_LENGTH_LIMIT});
 	if(!editor) return null;
 
 	return (
 		<div className={twMerge("border-2 border-zinc-700 rounded-md", className)}>
-			<TipTapEditorTools editor={editor} />
-			<EditorContent editor={editor} />
+			<InputBox editor={editor} className={"min-h-[200px] border-none"}></InputBox>
 			<div className="bg-zinc-950 p-2">
 				<div className="flex justify-between">
 				<Button
@@ -24,7 +23,7 @@ export default function ReplyBox({className, onSubmit})
 					className={"leading-normal h-min"}>
 					Submit
 				</Button>
-				<div>{editor.storage.characterCount.characters()} / {charLimit}</div>
+				<div>{editor.storage.characterCount.characters()} / {CONFIG.GENERIC_MAX_LENGTH_LIMIT}</div>
 				</div>
 			</div>
 		</div>

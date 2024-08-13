@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 export default function PostPreview({data, onVote, hideBoardName, hideUserName})
 {
-    console.log("post preview hideBoardName", hideBoardName)
     return (
         <div className="content-item bg-zinc-950 mb-8 min-h-32 flex flex-row pr-2 rounded-md">
             <VoteController 

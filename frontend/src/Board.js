@@ -1,15 +1,20 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Route, Routes } from "react-router-dom";
+import { useStore } from "./Store.js";
 
-
+import FrontpageControls from "./FrontpageControls.js";
+import BoardEditor from "./BoardEditor.js";
 import BoardControls from "./BoardControls.js";
 import CreatePost from "./CreatePost.js";
 import { MemoizedFeedManager } from "./FeedManager.js";
 import { MemoizedBanner } from "./Banner.js";
 import { MemoizedSidebar } from "./Sidebar.js";
 import { MemoizedPost } from "./Post.js";
+import CreateBoard from "./CreateBoard.js";
+import HTMLBearingDiv from "./HTMLBearingDiv.js";
 
 import { getData } from "./utils/fetch.js";
+import CONFIG from "./config.json"
 
 const validFilters = new Set(["hot", "top", "new"]);
 const defaultFilter = "hot";
@@ -17,9 +22,11 @@ const defaultFilter = "hot";
 export default function Board()
 {
     const {subreddit} = useParams();
-    console.log("board render")
 
+    const user = useStore((state) => state.user);
     const [board, setBoard] = useState(undefined);
+    const [moderator, setModerator] = useState(false);
+
     useEffect(() => {
         const fetchCategory = async () => {
             const response = await fetch(`https://localhost:3000/r/${subreddit}`, {method: "GET", credentials: "include"});
@@ -28,7 +35,10 @@ export default function Board()
                 let data = await (response.json());
                 console.log("data", data);
                 if(data.subreddit)
+                {
                     setBoard(data.subreddit);
+                    setModerator(data.moderator);
+                }
                 else
                     setBoard(undefined);
             }   
@@ -43,10 +53,11 @@ export default function Board()
             console.log("no board data to fetch.")
             setBoard(undefined);
         }
-    }, [subreddit])
+    }, [subreddit, user])
 
     const fetchFeedContent = useCallback(async function(queryParams, onSuccess)
     {
+        console.log("tesT");
         const baseRoute = subreddit ? `https://localhost:3000/r/${subreddit}/feed` : "https://localhost:3000/feed";
         getData({   baseRoute,
                     queryParams,
@@ -54,6 +65,7 @@ export default function Board()
         })
     }, [subreddit])
 
+    console.log("board render", board)
     const conditionallyRenderFrontPage = () =>
     {
         if(board)
@@ -65,23 +77,28 @@ export default function Board()
                         <Routes>
                             <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={board ? true : false}></MemoizedFeedManager>} />
                             <Route path="/post/:postId" element={<MemoizedPost />} />
-                            <Route path="/newPost" element={<CreatePost board={subreddit} charLimit={10000}/>} />
+                            <Route path="/newPost" element={<CreatePost board={subreddit} contentCharLimit={CONFIG.MAX_LENGTH_POST_CONTENT}/>} />
+                            <Route path="/edit" element={<BoardEditor board={subreddit} setBoard={setBoard} boardData={board}></BoardEditor>} />
                         </Routes>
                         <div className="w-1/3 mt-10 ml-12 ">
-                            <BoardControls board={subreddit}></BoardControls>
-                            <MemoizedSidebar sidebarContent={board.sidebar}></MemoizedSidebar>
+                            <BoardControls board={subreddit} moderator={moderator}></BoardControls>
+                            <MemoizedSidebar sidebarContent={<HTMLBearingDiv htmlContent={board.sidebar}></HTMLBearingDiv>}></MemoizedSidebar>
                         </div>
                     </div>
                 </>
                 )
         }
-        else
+        else if (!board && !subreddit)
         {
             return  (
                 <div className="flex w-full">
                     <Routes>
                         <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={false}></MemoizedFeedManager>} />
+                        <Route path="/createBoard" element={<CreateBoard></CreateBoard>}></Route>
                     </Routes>
+                    <div className="w-1/3 mt-10 ml-12 ">
+                            <FrontpageControls></FrontpageControls>
+                    </div>
                 </div>
             )
         }

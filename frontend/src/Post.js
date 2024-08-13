@@ -16,8 +16,9 @@ import Filter from "./Filter";
 import Button from "./Button";
 import ReplyBox from "./ReplyBox";
 
+import CONFIG from "./config.json"
+
 const validFilters = new Set(["top", "new"]);
-const MAX_COMMENTS_PER_PAGE = 20;
 
 
 /*
@@ -110,7 +111,7 @@ export default function Post()
     //User enters a page in the query params, which is converted to an offset(number of comments seen)
     //This retains the "page" functionality which is commonly known, but allows the rest of the code
     //to work with offsets, which is easier than constantly converting page back and forth.
-    const initialOffset = getOffsetFromPage(searchParams.get("page"), MAX_COMMENTS_PER_PAGE);
+    const initialOffset = getOffsetFromPage(searchParams.get("page"), CONFIG.COMMENTS_PER_PAGE);
     const initialFilter = validateFilter(searchParams.get("filter"), validFilters) || "top";
 
     // This effect triggers when the user changes(a new user means new vote data which must be fetched)

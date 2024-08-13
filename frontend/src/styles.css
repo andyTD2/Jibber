@@ -40,4 +40,10 @@ body {
   blockquote {
     @apply bg-zinc-900 border-l-2 border-zinc-500 m-4 p-2 text-sm
   }
+  pre {
+    @apply overflow-x-auto
+  }
+  code {
+    @apply bg-zinc-900 border-l-2 border-orange-600 m-4 p-2 text-sm block
+  }
 }

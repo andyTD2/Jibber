@@ -15,19 +15,21 @@ import ListItem from '@tiptap/extension-list-item'
 import BulletList from '@tiptap/extension-bullet-list'
 import OrderedList from '@tiptap/extension-ordered-list'
 import CharacterCount from '@tiptap/extension-character-count'
+import CodeBlock from '@tiptap/extension-code-block'
+import CONFIG from "../config.json"
 
 import { twMerge } from 'tailwind-merge';
 
-export const useTipTapEditor = ({charLimit, className, onUpdate}) =>
+export const useTipTapEditor = ({charLimit, className, onUpdate, initialContent, extensions}) =>
 {
-    if(!charLimit) charLimit = 2000;
+    if(!charLimit) charLimit = CONFIG.GENERIC_MAX_LENGTH_LIMIT;
 
     const options = 
     {
         extensions: 
         [
             Document, Paragraph, Text, Bold, Italic, Strike, Underline, 
-            Subscript, Superscript, Blockquote, BulletList, ListItem, OrderedList,
+            Subscript, Superscript, Blockquote, BulletList, ListItem, OrderedList, CodeBlock, 
             Heading.configure({levels: [1, 2, 3]}),
             CharacterCount.configure({limit: charLimit}),
         ],
@@ -35,12 +37,19 @@ export const useTipTapEditor = ({charLimit, className, onUpdate}) =>
         {
             attributes: 
             {
-                class: `${twMerge("mt-[3px] min-h-[200px] bg-zinc-800 p-2 break-all [&_ol]:list-decimal [&_ol]:ml-6 [&_ul]:ml-6 [&_ul]:list-disc", className)}`,
+                class: `${twMerge("flex-1 p-2 break-all [&_ol]:list-decimal [&_ol]:ml-6 [&_ul]:ml-6 [&_ul]:list-disc", className)}`,
             },
         },
-        onUpdate
+        content: initialContent
     }
+    if(onUpdate)
+        options.onUpdate = onUpdate;
 
+    if(extensions)
+        options.extensions = [Document, Text, Paragraph, CharacterCount.configure({limit: charLimit}), ...extensions];
+
+
+    console.log("options", options);
     const editor = useEditor(options);
 
     return editor;

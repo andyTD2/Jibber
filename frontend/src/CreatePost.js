@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { useTipTapEditor } from "./hooks/useTipTapEditor"
 
 import { postData } from "./utils/fetch";
+import CONFIG from "./config.json"
 
-export default function CreatePost({board, charLimit}) 
+export default function CreatePost({board, contentCharLimit}) 
 {
-    const editor = useTipTapEditor({charLimit, onUpdate: ({editor}) => setForm(prev => ({...prev, postContent: editor.getHTML()}))});
+    const editor = useTipTapEditor({charLimit: contentCharLimit});
     const navigate = useNavigate();
 
     // /{baseRoute, queryParams, body, onSuccess}
@@ -19,14 +20,14 @@ export default function CreatePost({board, charLimit})
         e.preventDefault();
         postData({
                     baseRoute: `https://localhost:3000/r/${board}/post/newPost`,
-                    body: form,
+                    body: {...form, postContent: editor.getHTML()},
                     onSuccess: (data) => {navigate(`/r/${board}/post/${data.postId}`)},
                     onFailure: (data) => {setError(data.error)}
                 })
     }
 
     const [error, setError] = useState();
-    const [form, setForm] = useState({postTitle: "", postLink: "", useArticleTitle: false, postContent: ""})
+    const [form, setForm] = useState({postTitle: "", postLink: "", useArticleTitle: false})
     console.log(form);
     
     if(!editor) return null;
@@ -44,7 +45,7 @@ export default function CreatePost({board, charLimit})
                     id="postTitle"
                     placeholder="Title"
                     value={form.postTitle}
-                    maxLength={300}
+                    maxLength={CONFIG.MAX_LENGTH_POST_TITLE}
                     onChange={(e) => setForm(prev => ({...prev, postTitle: e.target.value}))}
                 />
 
@@ -56,6 +57,7 @@ export default function CreatePost({board, charLimit})
                     id="postLink"
                     placeholder="Link"
                     value={form.postLink}
+                    maxLength={CONFIG.MAX_LENGTH_POST_LINK}
                     onChange={(e) => setForm(prev => ({...prev, postLink: e.target.value}))}
                 />
 
@@ -71,13 +73,13 @@ export default function CreatePost({board, charLimit})
                 </div>
 
                 <label htmlFor="postBody">Post Body</label>
-                <InputBox editor={editor} className={"rounded-lg"} id="postBody"></InputBox>
+                <InputBox editor={editor} className={"rounded-md min-h-[200px]"} id="postBody"></InputBox>
 
                 <div className="flex justify-between">               
                     <Button className="h-min mt-2">
                         Submit
                     </Button>
-                    <div>{editor.storage.characterCount.characters()} / {charLimit}</div>
+                    <div>{editor.storage.characterCount.characters()} / {contentCharLimit}</div>
                 </div>
                 {error && <div className="text-red-600">{error}</div>}
 

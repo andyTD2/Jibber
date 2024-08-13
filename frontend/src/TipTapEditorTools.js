@@ -77,6 +77,12 @@ export default function TipTapEditorTools({editor, className})
           active={['orderedList']}
           img="/numbered-light.png">
         </TipTapButton>
+        <TipTapButton
+          editor={editor}
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          active={['codeBlock']}
+          img="/codeblock-light.png">
+        </TipTapButton>
 
       </div>
     )
