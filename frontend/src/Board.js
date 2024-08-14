@@ -15,6 +15,7 @@ import HTMLBearingDiv from "./HTMLBearingDiv.js";
 
 import { getData } from "./utils/fetch.js";
 import CONFIG from "./config.json"
+import MetricsBanner from "./MetricsBanner.js";
 
 const validFilters = new Set(["hot", "top", "new"]);
 const defaultFilter = "hot";
@@ -26,6 +27,7 @@ export default function Board()
     const user = useStore((state) => state.user);
     const [board, setBoard] = useState(undefined);
     const [moderator, setModerator] = useState(false);
+    const [subscribed, setSubscribed] = useState(false);
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -36,8 +38,10 @@ export default function Board()
                 console.log("data", data);
                 if(data.subreddit)
                 {
+                    data.subreddit.created_at = new Date(data.subreddit.created_at);
                     setBoard(data.subreddit);
                     setModerator(data.moderator);
+                    setSubscribed(data.isSubscribed);
                 }
                 else
                     setBoard(undefined);
@@ -72,7 +76,15 @@ export default function Board()
         {
             return (
                 <>
-                    <MemoizedBanner bannerLink={`/r/${board.name}`}bannerTitle={board.name} bannerDescription={board.description}></MemoizedBanner>
+                    <MemoizedBanner bannerLink={`/r/${board.name}`}bannerTitle={board.name} bannerDescription={board.description} className={"rounded-bl-none"}>
+                        <MetricsBanner 
+                            metrics={{
+                                        "Est.": board.created_at.toLocaleDateString('en-US', {year: 'numeric', month: 'long'}),
+                                        Subscribers: board.numSubscribers,
+                                        Posts: board.numPosts
+                                    }}>            
+                        </MetricsBanner>
+                    </MemoizedBanner>
                     <div className="flex w-full">
                         <Routes>
                             <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={board ? true : false}></MemoizedFeedManager>} />
@@ -81,7 +93,7 @@ export default function Board()
                             <Route path="/edit" element={<BoardEditor board={subreddit} setBoard={setBoard} boardData={board}></BoardEditor>} />
                         </Routes>
                         <div className="w-1/3 mt-10 ml-12 ">
-                            <BoardControls board={subreddit} moderator={moderator}></BoardControls>
+                            <BoardControls boardName={board.name} boardId={board.id} moderator={moderator} subscribed={subscribed} user={user} setSubscribed={setSubscribed}></BoardControls>
                             <MemoizedSidebar sidebarContent={<HTMLBearingDiv htmlContent={board.sidebar}></HTMLBearingDiv>}></MemoizedSidebar>
                         </div>
                     </div>

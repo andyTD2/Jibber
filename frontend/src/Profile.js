@@ -10,6 +10,7 @@ import ProfileControls from "./ProfileControls";
 import ProfileEditor from "./ProfileEditor";
 import { useStore } from "./Store";
 import HTMLBearingDiv from "./HTMLBearingDiv";
+import MetricsBanner from "./MetricsBanner";
 
 const validFilters = new Set(["top", "new"]);
 const defaultFilter = "new";
@@ -54,20 +55,12 @@ export default function Profile()
     return (
     <div className="w-full px-12 overflow-y-scroll scrollbar">
         {profileData && <MemoizedBanner bannerLink={`/u/${profileData.userName}`} bannerTitle={profileData.userName} bannerDescription={profileData.description} className="rounded-bl-none">
-        <div className="flex">
-            <div className="pr-3 border-r-2 border-zinc-600">
-                <div className="text-zinc-400">Score</div>
-                <div>
-                    {profileData.numVotes}
-                </div>
-            </div>
-            <div className="px-3 border-r-2 border-zinc-600">
-                <div className="text-zinc-400">Joined</div>
-                <div>
-                    {profileData.created_at.toLocaleDateString('en-US', {year: 'numeric', month: 'long'})}
-                </div>
-            </div>
-        </div>
+        <MetricsBanner 
+            metrics={{
+                        Score: profileData.numVotes, 
+                        Joined: profileData.created_at.toLocaleDateString('en-US', {year: 'numeric', month: 'long'})
+                    }}>            
+        </MetricsBanner>
         </MemoizedBanner>}
         <div className="flex w-full">
             <Routes>
