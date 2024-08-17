@@ -10,10 +10,8 @@ export async function getAuthStatus()
     if(response.ok)
     {
         const setUser = useStore.getState().setUser;
-        const setSubscriptionsList = useStore.getState().setSubscriptionsList;
 
-        const { user, subscriptionsList } = (await response.json())
+        const { user } = (await response.json())
         setUser(user);
-        setSubscriptionsList(subscriptionsList);
     }
 }

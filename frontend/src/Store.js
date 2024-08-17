@@ -12,9 +12,6 @@ export const useStore = create((set) => {
         user: undefined,
         setUser: (newUser) => set({user: newUser}),
 
-        subscriptionsList: undefined,
-        setSubscriptionsList: (newSubscriptionsList) => set({subscriptionsList: newSubscriptionsList}),
-
         theme: "dark", //default
         setTheme: (newTheme) => set({theme: newTheme}),
 

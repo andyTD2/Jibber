@@ -13,6 +13,7 @@ export const addQueryParams = (baseRoute, queryParams) =>
 
 export const getData = async ({baseRoute, queryParams, onSuccess}) => 
 {
+    console.log(queryParams);
     baseRoute = addQueryParams(baseRoute, queryParams);
 
     const response = await fetch(baseRoute, {

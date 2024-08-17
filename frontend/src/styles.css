@@ -27,6 +27,28 @@ body {
   border-radius: 10px;
 }
 
+.scrollbar-light::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb{
+  background-color: #3f3f46;
+  width: 10px;
+  border-radius: 10px;
+}
+
+.scrollbar-light-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-light-thin::-webkit-scrollbar-thumb{
+  background-color: #3f3f46;
+  width: 6px;
+  height: 6px;
+  border-radius: 10px;
+}
+
 @layer base {
   h1 {
     @apply text-4xl;
@@ -41,9 +63,11 @@ body {
     @apply bg-zinc-900 border-l-2 border-zinc-500 m-4 p-2 text-sm
   }
   pre {
-    @apply overflow-x-auto
+    @apply overflow-x-auto scrollbar-light-thin
   }
   code {
-    @apply bg-zinc-900 border-l-2 border-orange-600 m-4 p-2 text-sm block
+    @apply bg-zinc-900 border-l-2 border-orange-600 m-4 p-2 text-sm overflow-x-scroll block scrollbar-light-thin
   }
+
+  
 }

@@ -108,9 +108,9 @@ export default function Board()
                         <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={false}></MemoizedFeedManager>} />
                         <Route path="/createBoard" element={<CreateBoard></CreateBoard>}></Route>
                     </Routes>
-                    <div className="w-1/3 mt-10 ml-12 ">
+                    {user && <div className="w-1/3 mt-10 ml-12 ">
                             <FrontpageControls></FrontpageControls>
-                    </div>
+                    </div>}
                 </div>
             )
         }
