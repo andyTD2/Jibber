@@ -15,9 +15,11 @@ const defaultFilter = "new";
 export default function SearchResults()
 {
     const postFeedParams = useFeedParams(validFilters, defaultFilter);
-    const postFeed = useFeed();
-    const communitiesFeed = useFeed();
-    const usersFeed = useFeed();
+
+    const calculateLastSeenFn = (items) => items[items.length - 1] && items[items.length - 1].id;
+    const postFeed = useFeed({calculateLastSeenFn});
+    const communitiesFeed = useFeed({calculateLastSeenFn});
+    const usersFeed = useFeed({calculateLastSeenFn});
 
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get("q");

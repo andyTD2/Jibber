@@ -11,7 +11,7 @@ export default function InputBox({className, toolsClassName, editorClassName, ed
 	return (
 		<div className={twMerge("box-border border-2 border-zinc-700 flex flex-col", className)}>
 			{showTools && <TipTapEditorTools editor={editor} className={toolsClassName} />}
-			<EditorContent editor={editor} className={twMerge("bg-zinc-800 flex-1 flex flex-col", editorClassName)}/>
+			<EditorContent editor={editor} className={twMerge("bg-zinc-800 flex-1 flex flex-col min-h-32", editorClassName)}/>
 		</div>
 	);
 };

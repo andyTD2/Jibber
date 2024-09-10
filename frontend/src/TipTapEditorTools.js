@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge"
 export default function TipTapEditorTools({editor, className})
 {
     return (
-        <div className={`${twMerge("flex h-10 items-center pl-2 bg-zinc-950", className)}`}>
+      <div className={`${twMerge("flex flex-wrap items-center pl-2 bg-zinc-950", className)}`}>
         <TipTapButton
           editor={editor}
           onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}

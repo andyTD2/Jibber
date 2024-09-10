@@ -63,7 +63,7 @@ export default function Leftbar()
         popularBoardsHtml = popularBoards.map((board, index) => 
             {
                 return (
-                    <Link to={`/r/${board.title}`} className={`flex items-center mt-2 hover:underline`}>
+                    <Link to={`/r/${board.title}`} key={index} className={`flex items-center mt-2 hover:underline`}>
                         <div className='placeholder-avatar rounded-full min-w-5 w-5 h-5 bg-blue-500 mr-2'></div>
                         <div className="-mt-1 overflow-x-hidden whitespace-nowrap text-ellipsis">{board.title}</div>
                     </Link>

@@ -11,7 +11,8 @@ import { MemoizedFeed } from "./Feed";
 export default function FeedManager({hideBoardName, hideUserName, defaultFilter, validFilters, fetchFeedContent, deps})
 {
     const {initialOffset, initialFilter, setFeedQueryParams} = useFeedParams(validFilters, defaultFilter);
-    const {feed, modifyFeedItem, mergeFeed, replaceFeed} = useFeed();
+
+    const {feed, modifyFeedItem, mergeFeed, replaceFeed} = useFeed({calculateLastSeenFn: (items) => items[items.length - 1] && items[items.length - 1].id});
 
     const user = useStore((state) => state.user);
 

@@ -15,25 +15,9 @@ export const useStore = create((set) => {
         theme: "dark", //default
         setTheme: (newTheme) => set({theme: newTheme}),
 
-        post: undefined,
-        setPost: (newPost) => set({post: newPost}),
-
-        feedContent: [],
-        setFeedContent: (newFeedContent) => set({feedContent: newFeedContent}),
-        appendFeedContent: (newFeedContent) => set(prev => ({feedContent: [...prev.feedContent, ...newFeedContent]})),
-        setContentItemInFeed: (contentId, contentItemChanges) => {set(prev => 
-        {
-            let newFeedContent = [...prev.feedContent]
-            for(let i = 0; i < newFeedContent.length; ++i)
-            {
-                if(newFeedContent[i].id == contentId)
-                {
-                    const newContentItem = Object.assign({}, newFeedContent[i], contentItemChanges);
-                    newFeedContent[i] = newContentItem;
-                    break;
-                }
-            }
-            return {feedContent: newFeedContent}
-        })}
+        messageNotifications: 0,
+        setMessageNotifications: (newMessageNotifications) => set({messageNotifications: newMessageNotifications}),
+        incrementMessageNotifications: () => set((state) => ({ messageNotifications: state.messageNotifications + 1 })),
+        subtractMessageNotifications: (subtrahend) => set((state) => ({ messageNotifications: state.messageNotifications - subtrahend }))
     };
     });

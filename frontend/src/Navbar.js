@@ -1,6 +1,7 @@
 import { useStore } from './Store';
 
 import SearchBar from './Searchbar';
+import MailNotifications from './MailNotifications';
 
 export default function Navbar(props) {
 
@@ -10,9 +11,7 @@ export default function Navbar(props) {
     const user = useStore((state) => state.user);
     if(user)
     {
-        msgIconHtml = user.hasMessages ? 
-            <img src="/mail-icon-light.png" className="my-auto w-5 h-5"></img> :
-            <img src="/mail-icon-light.png" className="my-auto w-5 h-5"></img>;
+        msgIconHtml = <MailNotifications user={user}></MailNotifications>
         accountActionHtml = <div className="my-auto mr-3">{user}</div>;
     }
     else
