@@ -50,7 +50,7 @@ export default function Leftbar()
             {
                 return (
                     <Link to={`/r/${subscription.title}`} key={index} className='flex items-center mt-2 hover:underline'>
-                        <div className='placeholder-avatar rounded-full w-5 h-5 bg-blue-500 mr-2'></div>
+                        <img className='placeholder-avatar rounded-full w-5 h-5 bg-blue-500 mr-2' src={subscription.subredditProfilePic}></img>
                         <div className="-mt-1 overflow-x-hidden whitespace-nowrap text-ellipsis">{subscription.title}</div>
                     </Link>
                 )
@@ -64,7 +64,7 @@ export default function Leftbar()
             {
                 return (
                     <Link to={`/r/${board.title}`} key={index} className={`flex items-center mt-2 hover:underline`}>
-                        <div className='placeholder-avatar rounded-full min-w-5 w-5 h-5 bg-blue-500 mr-2'></div>
+                        <img className='placeholder-avatar rounded-full w-5 h-5 bg-blue-500 mr-2' src={board.subredditProfilePic}></img>
                         <div className="-mt-1 overflow-x-hidden whitespace-nowrap text-ellipsis">{board.title}</div>
                     </Link>
                 )

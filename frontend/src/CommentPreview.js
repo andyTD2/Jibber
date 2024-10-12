@@ -21,7 +21,7 @@ export default function CommentPreview({data, onVote, hideBoardName, hideUserNam
                 <div className="flex items-end">
                     {data.subredditName && !hideBoardName &&
                     <>
-                        <div className='placeholder-avatar rounded-full w-5 h-5 bg-blue-500 mr-1'></div>
+                        <img className='placeholder-avatar rounded-full w-5 h-5 bg-blue-500 mr-1' src={data.boardProfilePic}></img>
                         <Link to={`/r/${data.subredditName}`} className=" hover:underline text-sm align-middle text-zinc-300">{data.subredditName}</Link>
                     </>}
                     {data.subredditName && !hideBoardName && data.author && !hideUserName && <div className="mx-2 text-zinc-300">&#8226;</div>}

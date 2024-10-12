@@ -28,7 +28,11 @@ export default function PostHeader({postHeaderData, className, setPost})
 
             {/* Post header content */}
             <div className="flex flex-col w-full px-4 py-1">
-                <CreatedTimestamp minutesSinceCreation={minutesSinceCreation}>by <Link to={`/u/${author}`} className="hover:underline">{author}</Link></CreatedTimestamp>
+                <div className="flex">
+                    <img className='placeholder-avatar rounded-full w-5 h-5 bg-red-500 mr-1' src={postHeaderData.authorProfilePic}></img>
+                    <Link to={`/u/${author}`} className="hover:underline text-xs align-middle text-zinc-300">{author}</Link>
+                </div>
+                <CreatedTimestamp minutesSinceCreation={minutesSinceCreation}></CreatedTimestamp>
                 {postLink && <a href={postLink}><div className="mt-2 text-xl hover:underline">{title}</div></a>}
                 {!postLink && <div className="mt-2 text-xl">{title}</div>}
                 <HTMLBearingDiv className="mt-2" htmlContent={content}></HTMLBearingDiv>

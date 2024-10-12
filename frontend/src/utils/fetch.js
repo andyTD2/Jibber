@@ -29,14 +29,14 @@ export const getData = async ({baseRoute, queryParams, onSuccess}) =>
     }
 }
 
-export const postData = async ({baseRoute, queryParams, body, onSuccess, onFailure}) => 
+export const postData = async ({baseRoute, queryParams, body, onSuccess, onFailure, headers = { "Content-Type" : "application/json"}}) => 
 {
     baseRoute = addQueryParams(baseRoute, queryParams);
 
     const response = await fetch(baseRoute, {
         method: "POST",
         credentials: 'include',
-        headers: { "Content-Type" : "application/json"},
+        headers,
         body: JSON.stringify(body)
     });
 

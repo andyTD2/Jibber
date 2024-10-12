@@ -2,6 +2,7 @@ import { useTipTapEditor } from "./hooks/useTipTapEditor";
 import { useState } from "react";
 import InputBox from "./InputBox";
 import Button from "./Button";
+import ImageInput from "./ImageInput";
 import { postData } from "./utils/fetch";
 import { useNavigate } from "react-router-dom";
 import CONFIG from "./config.json"
@@ -34,6 +35,40 @@ export default function ProfileEditor({profileData, user, setProfileData})
         })
     }
 
+    const handlePfPUpload = (file, fileSize, fileExtension) =>
+    {
+        //Get presigned url
+        postData({
+            baseRoute: "https://localhost:3000/uploadProfilePic",
+            body: {fileSize, fileExtension},
+            onSuccess: (result) => {
+                console.log(result);
+                uploadImage(result.data.presignedURL, file, fileExtension);
+            }
+        })
+    }
+
+    const uploadImage = async (url, file, fileExtension) =>
+    {
+        const response = await fetch(url, {
+            method: "PUT",
+            body: file
+        });
+
+        if(response.ok)
+        {
+            postData({
+                baseRoute: "https://localhost:3000/confirmProfilePicUpload",
+                body: {fileExtension},
+                onSuccess: (results) =>
+                {
+                    console.log("Upload successful!", results);
+                    setProfileData(prev => ({...prev, profilePic: results.url}))
+                }
+            })
+        }
+    }
+
     if(!descriptionEditor || !sidebarEditor || !profileData || user != profileData.userName) return <div className="w-full"></div>;
 
     return (
@@ -41,7 +76,9 @@ export default function ProfileEditor({profileData, user, setProfileData})
             <div>Edit Profile</div>
             <form className="w-full flex flex-col" onSubmit={handleSubmit}>
 
-                <label htmlFor="profileDescription">Board Description</label>
+                <ImageInput image={profileData.profilePic} onUpload={handlePfPUpload} className="my-4"></ImageInput>
+
+                <label htmlFor="profileDescription">Profile Description</label>
                 <InputBox editor={descriptionEditor} className={"rounded-md min-h-[100px]"} id="profileDescription" showTools={false}></InputBox>
                 <div className="ml-auto">{descriptionEditor.storage.characterCount.characters()} / {CONFIG.MAX_LENGTH_PROFILE_DESCRIPTION}</div>
 

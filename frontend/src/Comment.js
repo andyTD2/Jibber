@@ -52,7 +52,7 @@ export default function Comment({data, className, setPost, postComment, loadComm
 
                 {/*Contains the content of the comment*/}
                 <div className="rounded-r-md px-4 py-1 bg-zinc-950 flex-1">
-                    <CreatedTimestamp minutesSinceCreation={data.minutesSinceCreation} className="text-zinc-300">by <Link to={`/u/${data.author}`} className="hover:underline">{data.author}</Link></CreatedTimestamp>
+                    <CreatedTimestamp minutesSinceCreation={data.minutesSinceCreation} className="text-zinc-300">by <Link to={`/u/${data.author}`} className="hover:underline"><img className='inline placeholder-avatar rounded-full w-3 h-3 bg-red-500 mr-1' src={data.authorProfilePic}></img>{data.author}</Link></CreatedTimestamp>
                     <HTMLBearingDiv htmlContent={data.content} className="break-all my-1"></HTMLBearingDiv>
                     <div onClick={() => setReplyBoxOpen(prev => !prev)} className="text-zinc-300 hover:underline hover:cursor-pointer w-min">reply</div>
                 </div>

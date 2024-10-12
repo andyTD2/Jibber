@@ -50,11 +50,10 @@ export default function Profile()
         })
     }
 
-
     console.log("d", profileData)
     return (
     <div className="w-full px-12 overflow-y-scroll scrollbar">
-        {profileData && <MemoizedBanner bannerLink={`/u/${profileData.userName}`} bannerTitle={profileData.userName} bannerDescription={profileData.description} className="rounded-bl-none">
+        {profileData && <MemoizedBanner bannerPictureLink={profileData.profilePic} bannerLink={`/u/${profileData.userName}`} bannerTitle={profileData.userName} bannerDescription={profileData.description} className="rounded-bl-none">
         <MetricsBanner 
             metrics={{
                         Score: profileData.numVotes, 
@@ -81,7 +80,7 @@ export default function Profile()
             </Routes>
             {profileData && 
             <div className="w-1/3 mt-10 ml-12 ">
-                {user && user == profile && <ProfileControls profile={profileData.userName}></ProfileControls>}
+                {user && user.toLowerCase() == profile.toLowerCase() && <ProfileControls profile={profileData.userName}></ProfileControls>}
                 <MemoizedSidebar sidebarContent={<HTMLBearingDiv htmlContent={profileData.bio}></HTMLBearingDiv>}></MemoizedSidebar>
             </div>}
         </div>

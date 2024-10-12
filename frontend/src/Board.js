@@ -61,7 +61,6 @@ export default function Board()
 
     const fetchFeedContent = useCallback(async function(queryParams, onSuccess)
     {
-        console.log("tesT");
         const baseRoute = subreddit ? `https://localhost:3000/r/${subreddit}/feed` : "https://localhost:3000/feed";
         getData({   baseRoute,
                     queryParams,
@@ -76,7 +75,7 @@ export default function Board()
         {
             return (
                 <>
-                    <MemoizedBanner bannerLink={`/r/${board.name}`}bannerTitle={board.name} bannerDescription={board.description} className={"rounded-bl-none"}>
+                    <MemoizedBanner bannerLink={`/r/${board.name}`}bannerTitle={board.name} bannerDescription={board.description} bannerPictureLink={board.profilePic} className={"rounded-bl-none"}>
                         <MetricsBanner 
                             metrics={{
                                         "Est.": board.created_at.toLocaleDateString('en-US', {year: 'numeric', month: 'long'}),
@@ -87,10 +86,10 @@ export default function Board()
                     </MemoizedBanner>
                     <div className="flex w-full">
                         <Routes>
-                            <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={board ? true : false}></MemoizedFeedManager>} />
+                            <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={board ? true : false}></MemoizedFeedManager>} />
                             <Route path="/post/:postId" element={<MemoizedPost />} />
                             <Route path="/newPost" element={<CreatePost board={subreddit} contentCharLimit={CONFIG.MAX_LENGTH_POST_CONTENT}/>} />
-                            <Route path="/edit" element={<BoardEditor board={subreddit} setBoard={setBoard} boardData={board}></BoardEditor>} />
+                            <Route path="/edit" element={<BoardEditor moderator={moderator} board={subreddit} setBoard={setBoard} boardData={board}></BoardEditor>} />
                         </Routes>
                         <div className="w-1/3 mt-10 ml-12 ">
                             <BoardControls boardName={board.name} boardId={board.id} moderator={moderator} subscribed={subscribed} user={user} setSubscribed={setSubscribed}></BoardControls>
@@ -105,7 +104,7 @@ export default function Board()
             return  (
                 <div className="flex w-full">
                     <Routes>
-                        <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} subreddit={subreddit} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={false}></MemoizedFeedManager>} />
+                        <Route path="" element={<MemoizedFeedManager deps={[subreddit]} fetchFeedContent={fetchFeedContent} validFilters={validFilters} defaultFilter={defaultFilter} hideBoardName={false}></MemoizedFeedManager>} />
                         <Route path="/createBoard" element={<CreateBoard></CreateBoard>}></Route>
                     </Routes>
                     {user && <div className="w-1/3 mt-10 ml-12 ">

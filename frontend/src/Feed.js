@@ -44,6 +44,7 @@ export function Feed({hideBoardName, hideUserName, feed, handleItemVote})
                     bannerTitle={item.title}
                     bannerDescription={item.description}
                     bannerLink={`/r/${item.title}`}
+                    bannerPictureLink={item.boardProfilePic}
                 ></Banner>
             )
         }
@@ -56,6 +57,7 @@ export function Feed({hideBoardName, hideUserName, feed, handleItemVote})
                     bannerTitle={item.userName}
                     bannerDescription={item.description}
                     bannerLink={`/u/${item.userName}`}
+                    bannerPictureLink={item.profilePic}
                 ></Banner>
             )
         }

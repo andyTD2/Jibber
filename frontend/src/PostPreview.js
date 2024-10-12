@@ -15,17 +15,17 @@ export default function PostPreview({data, onVote, hideBoardName, hideUserName})
             
             <div className="flex flex-col px-4 py-1 mr-auto w-full min-w-0">
 
-                <div className="flex items-end">
+                <div className="flex items-center">
                     {data.subredditName && !hideBoardName &&
                     <>
-                        <div className='placeholder-avatar rounded-full w-5 h-5 bg-blue-500 mr-1'></div>
+                        <img className='placeholder-avatar rounded-full w-5 h-5 bg-blue-500 mr-1' src={data.boardProfilePic}></img>
                         <Link to={`/r/${data.subredditName}`} className=" hover:underline text-sm align-middle text-zinc-300">{data.subredditName}</Link>
                     </>}
                     {data.subredditName && !hideBoardName && data.author && !hideUserName && <div className="mx-2 text-zinc-300">&#8226;</div>}
                     {data.author && !hideUserName &&
                     <>
-                        <div className='placeholder-avatar rounded-full w-5 h-5 bg-red-500 mr-1'></div>
-                        <Link to={`/u/${data.author}`} className="hover:underline text-sm align-middle text-zinc-300">{data.author}</Link>
+                        <img className='placeholder-avatar rounded-full w-5 h-5 bg-red-500 mr-1' src={data.authorProfilePic}></img>
+                        <Link to={`/u/${data.author}`} className="hover:underline text-xs align-middle text-zinc-300">{data.author}</Link>
                     </>}
                 </div>
 
