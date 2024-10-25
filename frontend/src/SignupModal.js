@@ -1,23 +1,40 @@
-import Modal from './Modal';
-import TextInputSmallRound from './TextInputSmallRound';
+import MultiStepModal from './MultiStepModal';
 import { useStore } from './Store';
-import Button from './Button';
+import SignupForm from './SignupForm';
+import AccountVerificationForm from './AccountVerificationForm';
+import AccountCreationMessage from './AccountCreationMessage';
+import { useState, useRef } from 'react';
 
 export default function SignupModal()
 {
     const modalIsOpen = useStore((state) => state.signupModalIsOpen)
     const setSignupModalVisibility = useStore((state) => state.setSignupModalIsOpen)
 
+    const [curPage, setCurPage] = useState(0);
+    const accountName = useRef(undefined);
+
+
+    const handleClose = () => {
+        accountName.current = undefined;
+        setSignupModalVisibility(false);
+        setCurPage(0);
+    }
+
+    const steps = 
+    [
+        <SignupForm onSignup={(newAccountName) => {accountName.current = newAccountName; setCurPage(1)}}></SignupForm>,
+        <AccountVerificationForm username={accountName.current} onVerification={() => setCurPage(2)}></AccountVerificationForm>,
+        <AccountCreationMessage onClose={handleClose} username={accountName.current}></AccountCreationMessage>
+    ]
+
+
     return (
-        <Modal onClose={() => setSignupModalVisibility(false)} modalIsOpen={modalIsOpen}>
-            <div className="text-white text-3xl font-bold text-center mb-6">SIGN UP</div>
-            <form action="/userSignup" method="POST" className="flex flex-col items-center" id="signupForm">
-                <TextInputSmallRound id="usernameSignupInput" name="username" placeholder="Username" theme="dark" 
-                className="mb-3"> </TextInputSmallRound>
-                <TextInputSmallRound id="passwordSignupInput" name="password" placeholder="Password" theme="dark"
-                className="mb-6"></TextInputSmallRound>
-                <Button type="submit">Submit</Button>
-            </form>
-        </Modal>
+        <MultiStepModal 
+            onClose={handleClose} 
+            modalIsOpen={modalIsOpen} 
+            steps={steps}
+            curStep={curPage}
+            className={"rounded-md w-72 min-h-[22rem]"}
+        />
     )
 }

@@ -1,45 +1,57 @@
-import Modal from './Modal';
-import TextInputSmallRound from './TextInputSmallRound';
+import MultiStepModal from './MultiStepModal';
+import AccountVerificationForm from './AccountVerificationForm';
+import LoginForm from './LoginForm';
+import AccountCreationMessage from './AccountCreationMessage';
+
 import { useStore } from './Store';
-import Button from './Button';
-import { useEffect } from 'react';
-import { getAuthStatus } from './utils/getUser';
+import { useRef, useState } from 'react';
+
 
 export default function LoginModal()
 {
     const modalIsOpen = useStore((state) => state.loginModalIsOpen);
-    const setLoginModalVisibility = useStore((state) => state.setLoginModalIsOpen);
-    const setSignupModalVisibility = useStore((state) => state.setSignupModalIsOpen);
+    const setLoginModalVisibility = useStore((state) => state.setLoginModalIsOpen)
 
-    async function fetchLogin(event)
+    const [requiresVerification, setRequiresVerification] = useState(false);
+    const [curPage, setCurPage] = useState(0);
+
+    const accountName = useRef(undefined);
+
+
+    const handleLogin = (user) =>
     {
-        event.preventDefault();
-
-        const response = await fetch("https://localhost:3000/userLogin", {
-            method: "POST",
-            credentials: 'include',
-            headers: { "Content-Type" : "application/json"},
-            body: JSON.stringify({username: event.target.username.value, password: event.target.password.value})
-        });
-        if (response.ok)
+        if(user.requiresVerification)
         {
-            getAuthStatus();
-            setLoginModalVisibility(false);
+            accountName.current = user.user;
+            setRequiresVerification(true);
+            setCurPage(1);
         }
+        else
+            setLoginModalVisibility(false);
     }
 
+    const handleClose = () =>
+    {
+        accountName.current = undefined;
+        setRequiresVerification(false);
+        setLoginModalVisibility(false);
+        setCurPage(0);
+    }
+
+    const steps = [<LoginForm onLogin={handleLogin}></LoginForm>];
+    if(requiresVerification)
+    {
+        steps.push(<AccountVerificationForm onVerification={() => setCurPage(2)} username={accountName.current}></AccountVerificationForm>);
+        steps.push(<AccountCreationMessage onClose={handleClose} username={accountName.current}></AccountCreationMessage>);
+    }
 
     return (
-        <Modal onClose={() => setLoginModalVisibility(false)} modalIsOpen={modalIsOpen}>
-            <div className="text-white text-3xl font-bold text-center mb-6">SIGN IN</div>
-            <form action="/userLogin" method="POST" className="flex flex-col items-center mb-6" id="loginForm" onSubmit={fetchLogin}>
-                <TextInputSmallRound id="usernameLoginInput" name="username" placeholder="Username" theme="dark" 
-                className="mb-3"> </TextInputSmallRound>
-                <TextInputSmallRound id="passwordLoginInput" name="password" placeholder="Password" theme="dark"
-                className="mb-6"></TextInputSmallRound>
-                <Button type="submit">Submit</Button>
-                <div className="text-xs underline hover:cursor-pointer" onClick={() => {setLoginModalVisibility(false); setSignupModalVisibility(true)}}>Sign Up</div>
-            </form>
-        </Modal>
+        <MultiStepModal 
+            onClose={handleClose} 
+            modalIsOpen={modalIsOpen} 
+            steps={steps}
+            curStep={curPage}
+            className={"rounded-md w-72 min-h-72"}
+        />
     )
 }

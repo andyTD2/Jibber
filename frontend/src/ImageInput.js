@@ -27,7 +27,7 @@ export default function ImageInput({image, className, onUpload})
     return (
         <div className={`${twMerge("flex flex-col w-32", className)}`}>
             <div className="h-32 w-32 bg-zinc-800 p-2 mr-2">
-                <img src={image} className="h-full w-full rounded-full border-dotted border-white border-2"></img>
+                <img src={image} className="h-full w-full rounded-full border-dotted border-white border-2 object-cover"></img>
             </div>
             <input
                 type="file"

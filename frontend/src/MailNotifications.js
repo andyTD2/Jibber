@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { getData } from "./utils/fetch";
 import CONFIG from "./config.json"
 import { useStore } from "./Store";
+import { twMerge } from "tailwind-merge";
 
-export default function MailNotifications({user})
+export default function MailNotifications({className, user})
 {
     const messageNotifications = useStore((state) => state.messageNotifications);
     const setMessageNotifications = useStore((state) => state.setMessageNotifications);
@@ -19,9 +20,9 @@ export default function MailNotifications({user})
     }, [user])
 
     return (
-        <div className="my-auto w-5 h-5 relative">
+        <div className={twMerge("w-10 h-full relative", className)}>
             <Link to="/messages">
-                <img src="/mail-icon-light.png" className="w-5 h-5"></img>
+                <img src="/mail-icon-light.png" className="w-6 h-6"></img>
 
                 {messageNotifications > 0 &&
                 <div className="flex items-center justify-center rounded-full w-3 h-3 text-xs bg-red-600 text-white absolute -right-[.2rem] top-[.6rem]">

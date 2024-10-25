@@ -23,6 +23,9 @@
     "MIN_LENGTH_PASSWORD": 8,
     "MAX_LENGTH_MESSAGE_TITLE": 128,
     "MAX_LENGTH_MESSAGE_BODY": 2500,
+    "MAX_LENGTH_EMAIL": 320,
     "MESSAGES_PER_PAGE": 2,
-    "FRONTEND_ORIGIN": "http://localhost:3001"
+    "FRONTEND_ORIGIN": "http://localhost:3001",
+    "VERIFICATION_CODE_LENGTH": 6,
+    "DEFAULT_PROFILE_PICS": ["black.png", "blue.png", "green.png", "orange.png", "pink.png", "purple.png", "red.png", "yellow.png"]
 }

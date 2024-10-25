@@ -18,7 +18,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="h-full flex flex-col">
-        <Navbar boardName="HOME"/>
+        <Navbar/>
 
         <div className="h-full flex overflow-y-hidden bg-zinc-900">
           <Leftbar  user={{savedCommunities: ["test community 1", "test community 2", "test community 3", "test community 4"]}}

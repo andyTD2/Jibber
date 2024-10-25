@@ -40,6 +40,7 @@ export const postData = async ({baseRoute, queryParams, body, onSuccess, onFailu
         body: JSON.stringify(body)
     });
 
+    console.log(response);
     const data = await response.json();
 
     if(response.ok)
