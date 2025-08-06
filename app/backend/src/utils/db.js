@@ -8,7 +8,6 @@ const options = {
     password: SECRETS.MYSQL_PASSWORD,
     database: SECRETS.MYSQL_DATABASE
 }
-console.log(options);
 
 let newPool = db.createPool(options);
 
