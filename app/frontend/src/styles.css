@@ -1,0 +1,127 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+    margin: 0;
+    font-family: 'Roboto', 'Helvetica', 'Helvetica Neue', 'sans-serif', 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
+/*
+  .color-transition class applies no styles. It is used to identify elements where the transitioning effect
+  will be applied to during transition(before being removed again)
+*/
+
+/*
+  Transitioning step gradually transitions the color from dark to light or vice versa.
+*/
+.transitioning {
+    transition: color .7s ease, background-color 1s ease;
+}
+
+/*
+  Elements with this class will not gradually transition.
+*/
+.no-transition *{
+  transition: none !important
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  border: 3px solid transparent; /* Create spacing */
+  background-clip: content-box; /* Makes the thumb slimmer */
+}
+
+/* Firefox */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5) transparent; /* Thumb color and track color */
+}
+
+.scrollbar-extrathin::-webkit-scrollbar-thumb {
+  border: 5px solid transparent; /* Create spacing */
+  background-clip: content-box; /* Makes the thumb slimmer */
+}
+
+.scrollbar-extrathin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
+}
+
+@layer base {
+
+  @-moz-document url-prefix() {
+  .ff-right-pad {
+    padding-right: 400px;
+  }
+}
+
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb{
+    background-color: #94a3b8;
+    border-radius: 10px;
+  }
+
+  .dark ::-webkit-scrollbar-thumb{
+    background-color: #27272A;
+    border-radius: 10px;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  h1 {
+    @apply text-4xl;
+  }
+  h2 {
+    @apply text-2xl;
+  }
+  h3 {
+    @apply text-xl;
+  }
+  blockquote {
+    @apply dark:bg-dark4 bg-light3 border-l-2 border-zinc-500 m-4 p-2 text-sm
+  }
+  pre {
+    @apply overflow-x-auto scrollbar-extrathin
+  }
+  code {
+    @apply dark:bg-dark4 bg-light3 border-l-2 border-primaryText3 m-4 p-2 text-sm overflow-x-scroll block scrollbar-extrathin
+  }
+}
+
+@layer utilities 
+{
+    @media (max-width: 767px) {
+        ::-webkit-scrollbar-thumb {
+        border: 3px solid transparent;
+        background-clip: content-box;
+        }
+    }
+
+    .p-spacing p + p {
+        @apply min-h-6
+    }
+}

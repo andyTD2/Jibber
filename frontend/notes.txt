@@ -1,2 +1,0 @@
-topbar class renamed to navbar
-get free ssl ticket and make everything https
